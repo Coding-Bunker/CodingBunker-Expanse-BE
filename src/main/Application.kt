@@ -16,7 +16,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
-import it.codingbunker.tbs.expansebe.BuildConfig
 import it.codingbunker.tbs.it.codingbunker.tbs.data.repo.TakaoMongoClient
 import it.codingbunker.tbs.it.codingbunker.tbs.di.loadKoinModules
 import kotlinx.coroutines.runBlocking
