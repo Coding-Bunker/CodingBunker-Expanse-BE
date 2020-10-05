@@ -4,24 +4,14 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import io.ktor.application.*
 import io.ktor.client.features.json.*
 import io.ktor.features.*
-import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.locations.*
-import io.ktor.locations.get
 import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
-import it.codingbunker.tbs.it.codingbunker.tbs.data.repo.TakaoMongoClient
 import it.codingbunker.tbs.it.codingbunker.tbs.di.loadKoinModules
-import kotlinx.coroutines.runBlocking
-import kotlinx.css.*
-import kotlinx.html.*
-import org.koin.ktor.ext.*
+import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 import org.slf4j.event.Level
 import java.time.Duration
@@ -50,7 +40,7 @@ fun Application.mainModule(testing: Boolean = false) {
         filter { call -> call.request.path().startsWith("/") }
     }
 
-    install(Koin){
+    install(Koin) {
         slf4jLogger()
         loadKoinModules(environment)
     }
@@ -90,25 +80,25 @@ fun Application.mainModule(testing: Boolean = false) {
     }
 
 
+    /*
     runBlocking {
         // Sample for making a HTTP Client request
-        /*
+
         val message = client.post<JsonSampleClass> {
             url("http://127.0.0.1:8080/path/to/endpoint")
             contentType(ContentType.Application.Json)
             body = JsonSampleClass(hello = "world")
         }
-        */ }
+        }
+        */
 
-    routing {
-
-        val clientMongo: TakaoMongoClient by inject<TakaoMongoClient>()
+    /*routing {
 
         get("/") {
             call.respondText("HELLO WORLD!", contentType = ContentType.Text.Plain)
         }
 
-        /*
+        *//*
         get("/html-dsl") {
             call.respondHtml {
                 body {
@@ -144,7 +134,7 @@ fun Application.mainModule(testing: Boolean = false) {
                     color = Color.blue
                 }
             }
-        }*/
+        }*//*
 
         // Static feature. Try to access `/static/ktor_logo.svg`
         static("/static") {
@@ -186,13 +176,13 @@ fun Application.mainModule(testing: Boolean = false) {
             call.respond(mapOf("hello" to "world"))
         }
 
-        get("/test/response"){
+        get("/test/response") {
             call.respond(Type.List(Type("abc"), 2))
         }
-    }
+    }*/
 }
 
-@Location("/location/{name}")
+/*@Location("/location/{name}")
 class MyLocation(val name: String, val arg1: Int = 42, val arg2: String = "default")
 
 @Location("/type/{name}")
@@ -221,9 +211,4 @@ fun CommonAttributeGroupFacade.style(builder: CSSBuilder.() -> Unit) {
 
 suspend inline fun ApplicationCall.respondCss(builder: CSSBuilder.() -> Unit) {
     this.respondText(CSSBuilder().apply(builder).toString(), ContentType.Text.CSS)
-}
-
-@JvmOverloads
-fun Application.moduleUser(testing: Boolean = false) {
-
-}
+}*/
