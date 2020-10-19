@@ -11,27 +11,44 @@ val compileKotlin: KotlinCompile by tasks
 plugins {
     application
     java
+    idea
     kotlin("jvm") version "1.4.10"
     id("com.github.gmazzo.buildconfig") version "2.0.2"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.0"
-
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
 //    id("koin") version "2.2.0-beta-1"
 }
 
-group = "it.codingbunker.tbs"
+//group = "it.codingbunker.tbs"
 version = "0.0.1-alpha"
 
 application {
     mainClassName = "io.ktor.server.tomcat.EngineMain"
 }
 
+buildscript {
+
+    repositories {
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+    }
+
+    val kotlin_version: String by project
+    val koin_version: String by project
+
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlin_version")
+        classpath("org.koin:koin-gradle-plugin:$koin_version")
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.4.0")
+    }
+}
+
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
     maven { url = uri("https://kotlin.bintray.com/ktor") }
     maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
     maven { url = uri("https://kotlin.bintray.com/kotlinx") }
-    maven { url = uri("https://plugins.gradle.org/m2/") }
 }
 
 buildConfig {
@@ -63,20 +80,22 @@ dependencies {
 
     implementation("org.koin:koin-ktor:$koin_version")
     implementation("org.koin:koin-logger-slf4j:$koin_version")
-//    implementation("org.koin:koin-gradle-plugin:$koin_version")
+    testImplementation("org.koin:koin-test:$koin_version")
 
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongo_version")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
+    implementation("org.litote.kmongo:kmongo-id:$kmongo_version")
+    implementation("org.litote.kmongo:kmongo-id-jackson:$kmongo_version")
 
-    implementation("org.jlleitschuh.gradle:ktlint-gradle:9.4.0")
+    implementation("org.apache.commons:commons-text:1.8")
 }
 
-kotlin.sourceSets["main"].kotlin.srcDirs("src/main")
-kotlin.sourceSets["test"].kotlin.srcDirs("src/test")
+kotlin.sourceSets["main"].kotlin.srcDirs("src/main/kotlin")
+kotlin.sourceSets["test"].kotlin.srcDirs("src/test/kotlin")
 
-sourceSets["main"].resources.srcDirs("src/main/resources")
-sourceSets["test"].resources.srcDirs("src/test/resources")
+kotlin.sourceSets["main"].resources.srcDirs("src/main/resources")
+kotlin.sourceSets["test"].resources.srcDirs("src/test/resources")
 
 compileKotlin.kotlinOptions {
     jvmTarget = JavaVersion.VERSION_12.toString()

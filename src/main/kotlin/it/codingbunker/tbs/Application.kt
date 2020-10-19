@@ -1,6 +1,7 @@
 package it.codingbunker.tbs
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.application.*
 import io.ktor.client.features.json.*
 import io.ktor.features.*
@@ -10,9 +11,10 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
-import it.codingbunker.tbs.it.codingbunker.tbs.di.loadKoinModules
+import it.codingbunker.tbs.di.loadKoinModules
 import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
+import org.litote.kmongo.id.jackson.IdJacksonModule
 import org.slf4j.event.Level
 import java.time.Duration
 
@@ -75,6 +77,8 @@ fun Application.mainModule(testing: Boolean = false) {
         defaultSerializer()
 
         jackson {
+            registerModule(IdJacksonModule())
+            registerKotlinModule()
             enable(SerializationFeature.INDENT_OUTPUT)
         }
     }

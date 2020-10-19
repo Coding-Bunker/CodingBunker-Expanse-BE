@@ -1,4 +1,4 @@
-package utils
+package it.condingbunker.tbs.test.utilstest
 
 import com.typesafe.config.ConfigFactory
 import io.ktor.application.*
