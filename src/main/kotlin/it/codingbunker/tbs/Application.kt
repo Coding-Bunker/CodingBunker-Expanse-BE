@@ -1,14 +1,17 @@
 package it.codingbunker.tbs
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.application.*
 import io.ktor.client.features.json.*
 import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.jackson.*
 import io.ktor.locations.*
 import io.ktor.request.*
+import io.ktor.response.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.di.loadKoinModules
@@ -40,6 +43,13 @@ fun Application.mainModule(testing: Boolean = false) {
     install(CallLogging) {
         level = Level.DEBUG
         filter { call -> call.request.path().startsWith("/") }
+    }
+
+    install(StatusPages) {
+        exception<MissingKotlinParameterException> { cause ->
+            call.respond(HttpStatusCode.BadRequest)
+        }
+
     }
 
     install(Koin) {

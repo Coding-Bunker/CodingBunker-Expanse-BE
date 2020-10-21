@@ -89,6 +89,15 @@ dependencies {
     implementation("org.litote.kmongo:kmongo-id-jackson:$kmongo_version")
 
     implementation("org.apache.commons:commons-text:1.8")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
+}
+
+configurations.all {
+    //Exclude JUNIT4 Dedicated Kotlin Annotation
+    exclude("org.jetbrains.kotlin", "kotlin-test-junit")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src/main/kotlin")
@@ -97,8 +106,12 @@ kotlin.sourceSets["test"].kotlin.srcDirs("src/test/kotlin")
 kotlin.sourceSets["main"].resources.srcDirs("src/main/resources")
 kotlin.sourceSets["test"].resources.srcDirs("src/test/resources")
 
-compileKotlin.kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_12.toString()
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_12.toString()
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 ktlint {

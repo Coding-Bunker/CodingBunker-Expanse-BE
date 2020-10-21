@@ -32,11 +32,6 @@ open class DiscordGuild constructor() {
         this.guildName = guildName
     }
 
-    @Location("/create")
-    class DiscordGuildCreate(
-        val parent: DiscordGuild
-    ) : DiscordGuild()
-
     @Location("/{serverId}")
     class DiscordGuildGet(val parent: DiscordGuild, var serverId: String)
 

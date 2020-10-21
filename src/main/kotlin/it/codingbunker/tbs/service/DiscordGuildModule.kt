@@ -23,10 +23,12 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
             trace { application.log.warn(it.buildText()) }
         }
 
-        put<DiscordGuild.DiscordGuildCreate> {
+        put<DiscordGuild> {
             val discordGuild = call.receive<DiscordGuild>()
 
-            if (discordGuild.guildId.toString().isBlank()) {
+            if (discordGuild.guildId.toString().isBlank()
+                || discordGuild.guildName.isBlank()
+            ) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@put
             }
