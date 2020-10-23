@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory
 
 const val CONFIG_NAME: String = "application-test.conf"
 
+val jacksonMapper = jacksonObjectMapper()
+
 fun <R> withRealTestApplication(
     moduleFunction: Application.() -> Unit,
     configure: TestApplicationEngine.Configuration.() -> Unit = {},
@@ -33,4 +35,7 @@ fun createRealTestEnvironment(
 
 fun loadConfig(confName: String = CONFIG_NAME) = HoconApplicationConfig(ConfigFactory.load(confName))
 
-fun Map<String, Any>.toJson() = jacksonObjectMapper().writeValueAsString(this)
+fun Map<String, Any>.toJson() = jacksonMapper.writeValueAsString(this)
+
+fun Any.toJson() = jacksonMapper
+    .writeValueAsString(this)

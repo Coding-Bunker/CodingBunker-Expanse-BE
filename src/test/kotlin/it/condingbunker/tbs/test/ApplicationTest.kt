@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Nested
 import org.koin.ktor.ext.inject
 import org.koin.test.KoinTest
 import org.litote.kmongo.getCollection
-import org.litote.kmongo.id.StringId
 import org.litote.kmongo.insertOne
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -50,15 +49,27 @@ class ApplicationTest : KoinTest {
             installMockKoin()
         }
 
+        private fun insertMockGuild(serverId: String) {
+            val requestInsert = DiscordGuild(
+                guildId = serverId,
+                symbolCommand = "!",
+                guildName = "codingBunky"
+            ).toJson()
+
+            takaoMongoClientTest.mongoClientDB.getCollection<DiscordGuild>().run {
+                insertOne(requestInsert)
+            }
+        }
+
         @Test
         fun `Create Guild with all parameters, Result is created`() {
             val serverId = "AZ1123"
 
-            val request = mapOf(
-                "serverId" to serverId,
-                "symbolCommand" to "!",
-                "guildName" to "codingBunky"
-            ).toJson()
+            val request = DiscordGuild(
+                guildId = serverId,
+                symbolCommand = "!",
+                guildName = "codingBunky"
+            )
 
             withRealTestApplication(
                 {
@@ -66,14 +77,14 @@ class ApplicationTest : KoinTest {
                 }
             ) {
                 handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
-                    addHeader("Content-type", "application/json")
-                    setBody(request)
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.contentType)
+                    setBody(request.toJson())
                 }.apply {
                     assertEquals(HttpStatusCode.Created, response.status())
 
                     val discordRepositoryInterface by inject<DiscordRepositoryInterface>()
 
-                    val result = discordRepositoryInterface.existDiscordGuildById(StringId(serverId))
+                    val result = discordRepositoryInterface.existDiscordGuildById(serverId)
 
                     assertEquals(true, result)
                 }
@@ -84,34 +95,26 @@ class ApplicationTest : KoinTest {
         fun `Create Guild it exist, Result is conflict`() {
             val serverId = "AZ1123"
 
-            val requestInsert = mapOf(
-                "_id" to serverId,
-                "symbolCommand" to "!",
-                "guildName" to "codingBunky"
-            ).toJson()
+            val request = DiscordGuild(
+                guildId = serverId,
+                symbolCommand = "!",
+                guildName = "codingBunky"
+            )
 
-            val request = mapOf(
-                "serverId" to serverId,
-                "symbolCommand" to "!",
-                "guildName" to "codingBunky"
-            ).toJson()
-
-            takaoMongoClientTest.mongoClientDB.getCollection<DiscordGuild>().run {
-                insertOne(requestInsert)
-            }
+            insertMockGuild(serverId)
 
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
                 handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
-                    addHeader("Content-type", "application/json")
-                    setBody(request)
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request.toJson())
                 }.apply {
                     assertEquals(HttpStatusCode.Conflict, response.status())
 
                     val discordRepositoryInterface by inject<DiscordRepositoryInterface>()
 
-                    val result = discordRepositoryInterface.existDiscordGuildById(StringId(serverId))
+                    val result = discordRepositoryInterface.existDiscordGuildById(serverId)
 
                     assertEquals(true, result)
                 }
@@ -120,19 +123,19 @@ class ApplicationTest : KoinTest {
 
         @Test
         fun `Create guild server id blank, Result is BadRequest`() {
-            val request = mapOf(
-                "serverId" to "",
-                "symbolCommand" to "!",
-                "guildName" to "codingBunky"
-            ).toJson()
+            val request = DiscordGuild(
+                guildId = "",
+                symbolCommand = "!",
+                guildName = "codingBunky"
+            )
 
 
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
                 handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
-                    addHeader("Content-type", "application/json")
-                    setBody(request)
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request.toJson())
                 }.apply {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
@@ -151,7 +154,7 @@ class ApplicationTest : KoinTest {
                 installDiscordGuildModules()
             }) {
                 handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
-                    addHeader("Content-type", "application/json")
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
@@ -173,10 +176,39 @@ class ApplicationTest : KoinTest {
                 installDiscordGuildModules()
             }) {
                 handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
-                    addHeader("Content-type", "application/json")
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
+
+        @Test
+        fun `Get guild Result is guild obj`() {
+            val serverId = "AZ1123"
+
+            val responseJSON = DiscordGuild(
+                guildId = serverId,
+                symbolCommand = "!",
+                guildName = "codingBunky"
+            ).toJson()
+
+            insertMockGuild(serverId)
+
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                handleRequest(HttpMethod.Get, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }.apply {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertEquals(
+                        responseJSON,
+                        response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
+                    )
+
                 }
             }
         }

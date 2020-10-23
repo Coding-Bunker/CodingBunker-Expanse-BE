@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.application.*
-import io.ktor.client.features.json.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -84,7 +83,7 @@ fun Application.mainModule(testing: Boolean = false) {
     }
 
     install(ContentNegotiation) {
-        defaultSerializer()
+//        defaultSerializer()
 
         jackson {
             registerModule(IdJacksonModule())

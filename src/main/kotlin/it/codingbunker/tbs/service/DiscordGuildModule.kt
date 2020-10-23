@@ -20,13 +20,15 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
 
     routing {
         if (testOrDebug) {
-            trace { application.log.warn(it.buildText()) }
+            trace {
+                application.log.warn(it.buildText())
+            }
         }
 
         put<DiscordGuild> {
             val discordGuild = call.receive<DiscordGuild>()
 
-            if (discordGuild.guildId.toString().isBlank()
+            if (discordGuild.guildId.isBlank()
                 || discordGuild.guildName.isBlank()
             ) {
                 call.respond(HttpStatusCode.BadRequest)
@@ -40,6 +42,23 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
                 call.respond(HttpStatusCode.Created)
             }
 
+        }
+
+        get<DiscordGuild.DiscordGuildGet> {
+            val discordGuildIdRequested = call.parameters.getAll(DiscordGuild.DiscordGuildGet::serverId.name)
+
+            if (discordGuildIdRequested == null) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+
+            val discordGuild = discordRepository.getDiscordGuildById(discordGuildIdRequested.first())
+
+            if (discordGuild == null) {
+                call.respond(HttpStatusCode.NotFound)
+            } else {
+                call.respond(discordGuild)
+            }
         }
     }
 }
