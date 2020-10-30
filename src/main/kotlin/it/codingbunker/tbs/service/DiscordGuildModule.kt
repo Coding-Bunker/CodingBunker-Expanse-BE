@@ -6,7 +6,8 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import it.codingbunker.tbs.data.bean.guild.DiscordGuild
+import it.codingbunker.tbs.data.bean.guild.DiscordGuildDTO
+import it.codingbunker.tbs.data.bean.guild.DiscordGuildRoute
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
 import org.koin.ktor.ext.inject
 
@@ -25,8 +26,8 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
             }
         }
 
-        put<DiscordGuild> {
-            val discordGuild = call.receive<DiscordGuild>()
+        put<DiscordGuildRoute> {
+            val discordGuild = call.receive<DiscordGuildDTO>()
 
             if (discordGuild.guildId.isBlank()
                 || discordGuild.guildName.isBlank()
@@ -44,8 +45,8 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
 
         }
 
-        get<DiscordGuild.DiscordGuildGet> {
-            val discordGuildIdRequested = call.parameters.getAll(DiscordGuild.DiscordGuildGet::serverId.name)
+        get<DiscordGuildRoute.DiscordGuildRouteGet> {
+            val discordGuildIdRequested = call.parameters.getAll(DiscordGuildRoute.DiscordGuildRouteGet::serverId.name)
 
             if (discordGuildIdRequested == null) {
                 call.respond(HttpStatusCode.BadRequest)

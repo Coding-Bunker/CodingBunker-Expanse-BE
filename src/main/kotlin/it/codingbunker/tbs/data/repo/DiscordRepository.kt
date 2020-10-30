@@ -1,41 +1,63 @@
 package it.codingbunker.tbs.data.repo
 
 import it.codingbunker.tbs.data.bean.guild.DiscordGuild
-import it.codingbunker.tbs.data.client.TakaoMongoClient
-import org.litote.kmongo.eq
-import org.litote.kmongo.findOne
-import org.litote.kmongo.getCollection
+import it.codingbunker.tbs.data.bean.guild.DiscordGuildDTO
+import it.codingbunker.tbs.data.bean.guild.DiscordGuilds
+import it.codingbunker.tbs.data.client.TakaoSQLClient
+import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.exposedLogger
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 
 interface DiscordRepositoryInterface {
-    fun createDiscordGuild(discordGuild: DiscordGuild)
+    suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO)
 
-    fun existDiscordGuildById(guildId: String): Boolean
+    suspend fun existDiscordGuildById(guildId: String): Boolean
 
-    fun getDiscordGuildById(guildId: String): DiscordGuild?
+    suspend fun getDiscordGuildById(guildId: String): DiscordGuildDTO?
 }
 
-class DiscordRepository(private val takaoMongoClient: TakaoMongoClient) : DiscordRepositoryInterface {
+class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRepositoryInterface {
 
+    override suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO) {
+        newSuspendedTransaction {
+            addLogger(Slf4jSqlDebugLogger)
 
-    override fun createDiscordGuild(discordGuild: DiscordGuild) {
-        takaoMongoClient.mongoClientDB.getCollection<DiscordGuild>().run {
             if (existDiscordGuildById(discordGuild.guildId)) {
-                return
+                return@newSuspendedTransaction
+            } else {
+                DiscordGuild.new(discordGuild.guildId) {
+                    guildName = discordGuild.guildName
+                    symbolCommand = discordGuild.symbolCommand
+                }
             }
-            insertOne(discordGuild)
         }
     }
 
-    override fun existDiscordGuildById(guildId: String): Boolean {
-        return takaoMongoClient.mongoClientDB.getCollection<DiscordGuild>().run {
-            findOne { DiscordGuild::guildId eq guildId } != null
-        }
-    }
+    override suspend fun existDiscordGuildById(guildId: String): Boolean =
+        newSuspendedTransaction {
+            exposedLogger
+            addLogger(Slf4jSqlDebugLogger)
 
-    override fun getDiscordGuildById(guildId: String): DiscordGuild? {
-        return takaoMongoClient.mongoClientDB.getCollection<DiscordGuild>().run {
-            findOne { DiscordGuild::guildId eq guildId }
+            DiscordGuilds.select {
+                DiscordGuilds.id eq guildId
+            }.firstOrNull().run {
+                return@newSuspendedTransaction this != null
+            }
         }
-    }
+
+    override suspend fun getDiscordGuildById(guildId: String): DiscordGuildDTO? =
+        newSuspendedTransaction {
+            val result = DiscordGuild.findById(guildId) ?: return@newSuspendedTransaction null
+
+            return@newSuspendedTransaction DiscordGuildDTO(
+                guildId = result.id.value,
+                guildName = result.guildName,
+                symbolCommand = result.symbolCommand
+            )
+
+        }
+
 }

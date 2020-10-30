@@ -13,10 +13,12 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
+import it.codingbunker.tbs.data.client.TakaoSQLClient
 import it.codingbunker.tbs.di.loadKoinModules
+import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
 import org.koin.logger.slf4jLogger
-import org.litote.kmongo.id.jackson.IdJacksonModule
 import org.slf4j.event.Level
 import java.time.Duration
 
@@ -56,6 +58,11 @@ fun Application.mainModule(testing: Boolean = false) {
         loadKoinModules(environment)
     }
 
+    val client by inject<TakaoSQLClient>()
+    runBlocking {
+        client.checkAndActivateDB()
+    }
+
     install(DataConversion)
 
     // https://ktor.io/servers/features/https-redirect.html#testing
@@ -86,7 +93,6 @@ fun Application.mainModule(testing: Boolean = false) {
 //        defaultSerializer()
 
         jackson {
-            registerModule(IdJacksonModule())
             registerKotlinModule()
             enable(SerializationFeature.INDENT_OUTPUT)
         }
