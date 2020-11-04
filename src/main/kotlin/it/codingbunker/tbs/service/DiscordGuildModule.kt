@@ -45,15 +45,15 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
 
         }
 
-        get<DiscordGuildRoute.DiscordGuildRouteGet> {
-            val discordGuildIdRequested = call.parameters.getAll(DiscordGuildRoute.DiscordGuildRouteGet::serverId.name)
+        get<DiscordGuildRoute.DiscordGuildRouteId> {
+            val discordGuildIdRequested = call.parameters[DiscordGuildRoute.DiscordGuildRouteId::guildId.name]
 
             if (discordGuildIdRequested == null) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@get
             }
 
-            val discordGuild = discordRepository.getDiscordGuildById(discordGuildIdRequested.first())
+            val discordGuild = discordRepository.getDiscordGuildById(discordGuildIdRequested)
 
             if (discordGuild == null) {
                 call.respond(HttpStatusCode.NotFound)
@@ -61,5 +61,28 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
                 call.respond(discordGuild)
             }
         }
+
+        patch<DiscordGuildRoute.DiscordGuildRouteId> {
+            val discordGuildIdRequested = call.parameters[DiscordGuildRoute.DiscordGuildRouteId::guildId.name]
+
+            if (discordGuildIdRequested.isNullOrBlank()) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@patch
+            }
+
+            val guildExist = discordRepository.existDiscordGuildById(discordGuildIdRequested)
+
+            if (guildExist.not()) {
+                call.respond(HttpStatusCode.NotFound)
+                return@patch
+            }
+
+            val discordGuildUpdate = call.receive<DiscordGuildDTO>()
+
+            val discordGuild = discordRepository.updateDiscordGuild(discordGuildUpdate)
+
+            call.respond(HttpStatusCode.OK, discordGuild)
+        }
+
     }
 }

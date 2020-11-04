@@ -10,8 +10,8 @@ import org.jetbrains.exposed.dao.id.EntityID
 
 @Location("$BASE_API_URL/discord/guild/")
 class DiscordGuildRoute {
-    @Location("/{serverId}")
-    class DiscordGuildRouteGet(val parent: DiscordGuildRoute, var serverId: String)
+    @Location("/{guildId}")
+    class DiscordGuildRouteId(val parent: DiscordGuildRoute, var guildId: String)
 }
 
 
@@ -19,8 +19,8 @@ object DiscordGuilds : StringIdTable(
     columnName = "guildId",
     columnLength = 100
 ) {
-    val guildName = varchar("guildName", 255)
-    val symbolCommand = varchar("symbolCommand", 25).default("!")
+    var guildName = varchar("guildName", 255)
+    var symbolCommand = varchar("symbolCommand", 25).default("!")
 }
 
 class DiscordGuild(id: EntityID<String>) : Entity<String>(id) {

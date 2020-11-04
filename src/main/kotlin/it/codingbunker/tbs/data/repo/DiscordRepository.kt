@@ -6,13 +6,15 @@ import it.codingbunker.tbs.data.bean.guild.DiscordGuilds
 import it.codingbunker.tbs.data.client.TakaoSQLClient
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.exposedLogger
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.update
 
 
 interface DiscordRepositoryInterface {
     suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO)
+
+    suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): DiscordGuildDTO
 
     suspend fun existDiscordGuildById(guildId: String): Boolean
 
@@ -36,9 +38,17 @@ class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRep
         }
     }
 
+    override suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): DiscordGuildDTO =
+        newSuspendedTransaction {
+            DiscordGuilds.update({ DiscordGuilds.id eq discordGuild.guildId }) {
+                it[guildName] = discordGuild.guildName
+                it[symbolCommand] = discordGuild.symbolCommand
+            }
+            return@newSuspendedTransaction discordGuild
+        }
+
     override suspend fun existDiscordGuildById(guildId: String): Boolean =
         newSuspendedTransaction {
-            exposedLogger
             addLogger(Slf4jSqlDebugLogger)
 
             DiscordGuilds.select {
@@ -50,6 +60,7 @@ class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRep
 
     override suspend fun getDiscordGuildById(guildId: String): DiscordGuildDTO? =
         newSuspendedTransaction {
+            addLogger(Slf4jSqlDebugLogger)
             val result = DiscordGuild.findById(guildId) ?: return@newSuspendedTransaction null
 
             return@newSuspendedTransaction DiscordGuildDTO(

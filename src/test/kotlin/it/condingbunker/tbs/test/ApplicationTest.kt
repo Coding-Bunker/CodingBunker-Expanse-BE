@@ -202,7 +202,7 @@ class ApplicationTest : KoinTest {
         }
 
         @Test
-        fun `Get guild Result is guild obj`() {
+        fun `Get guild, Result is guild obj`() {
             val serverId = "AZ1123"
 
             val responseJSON = DiscordGuildDTO(
@@ -224,11 +224,52 @@ class ApplicationTest : KoinTest {
                         responseJSON,
                         response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
                     )
+                }
+            }
+        }
+
+        @Test
+        fun `Get guild, Result is 404`() {
+            val serverId = "AZ1123"
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                handleRequest(HttpMethod.Get, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }.apply {
+                    assertEquals(HttpStatusCode.NotFound, response.status())
 
                 }
             }
         }
+
+        @Test
+        fun `Edit guild, Result is edited`() {
+            val serverId = "AZ1123"
+
+            val request = DiscordGuildDTO(
+                guildId = serverId,
+                symbolCommand = "%",
+                guildName = "codingBunka"
+            ).toJson()
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                insertMockGuild(serverId)
+
+                handleRequest(HttpMethod.Patch, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertEquals(
+                        request,
+                        response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
+                    )
+                }
+            }
+        }
     }
-
-
 }
