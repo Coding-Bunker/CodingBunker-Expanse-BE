@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.data.client
 
-import it.codingbunker.tbs.data.bean.guild.DiscordGuilds
+import it.codingbunker.tbs.data.table.DiscordGuilds
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction

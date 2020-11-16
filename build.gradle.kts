@@ -83,11 +83,9 @@ dependencies {
     implementation("org.koin:koin-logger-slf4j:$koin_version")
     testImplementation("org.koin:koin-test:$koin_version")
 
-    // KMongo
-//    implementation("org.litote.kmongo:kmongo:$kmongo_version")
-//    implementation("org.litote.kmongo:kmongo-coroutine:$kmongo_version")
-//    implementation("org.litote.kmongo:kmongo-id:$kmongo_version")
-//    implementation("org.litote.kmongo:kmongo-id-jackson:$kmongo_version")
+    //Result
+    implementation("com.github.kittinunf.result:result:3.1.0")
+    implementation("com.github.kittinunf.result:result-coroutines:3.1.0")
 
     //Exposed
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")

@@ -1,4 +1,4 @@
-package it.codingbunker.tbs.data.bean
+package it.codingbunker.tbs.data.table
 
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass

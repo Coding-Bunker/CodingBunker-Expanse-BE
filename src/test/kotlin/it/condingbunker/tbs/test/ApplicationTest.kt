@@ -4,10 +4,10 @@ import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import it.codingbunker.tbs.data.bean.guild.DiscordGuild
-import it.codingbunker.tbs.data.bean.guild.DiscordGuildDTO
 import it.codingbunker.tbs.data.client.TakaoSQLClient
+import it.codingbunker.tbs.data.dto.DiscordGuildDTO
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
+import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.mainModule
 import it.codingbunker.tbs.service.discordGuildRoutes
 import it.codingbunker.tbs.utils.Costant
@@ -268,6 +268,62 @@ class ApplicationTest : KoinTest {
                         request,
                         response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
                     )
+                }
+            }
+        }
+
+        @Test
+        fun `Edit guild with symbolCommand null, Result edited`() {
+            val serverId = "AZ1123"
+
+            val request = mapOf(
+                DiscordGuildDTO::guildId.name to serverId,
+                DiscordGuildDTO::guildName.name to "codingBunka"
+            ).toJson()
+
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                insertMockGuild(serverId)
+
+                handleRequest(HttpMethod.Patch, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.OK, response.status())
+                    assertEquals(
+                        DiscordGuildDTO(
+                            guildId = serverId,
+                            symbolCommand = "%",
+                            guildName = "codingBunka"
+                        ).toJson(),
+                        response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
+                    )
+                }
+            }
+        }
+
+        @Test
+        fun `Edit guild with guildId empty, Result error`() {
+            val serverId = "AZ1123"
+
+            val request = DiscordGuildDTO(
+                guildId = "",
+                symbolCommand = "%",
+                guildName = "codingBunka"
+            ).toJson()
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                insertMockGuild(serverId)
+
+                handleRequest(HttpMethod.Patch, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
             }
         }

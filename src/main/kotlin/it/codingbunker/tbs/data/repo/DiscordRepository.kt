@@ -1,20 +1,24 @@
 package it.codingbunker.tbs.data.repo
 
-import it.codingbunker.tbs.data.bean.guild.DiscordGuild
-import it.codingbunker.tbs.data.bean.guild.DiscordGuildDTO
-import it.codingbunker.tbs.data.bean.guild.DiscordGuilds
+import com.github.kittinunf.result.coroutines.SuspendableResult
 import it.codingbunker.tbs.data.client.TakaoSQLClient
+import it.codingbunker.tbs.data.dto.DiscordGuildDTO
+import it.codingbunker.tbs.data.table.DiscordGuild
+import it.codingbunker.tbs.data.table.DiscordGuilds
+import it.codingbunker.tbs.utils.onFailure
+import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.update
+import java.sql.Connection.TRANSACTION_SERIALIZABLE
 
 
 interface DiscordRepositoryInterface {
     suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO)
 
-    suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): DiscordGuildDTO
+    suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): SuspendableResult<DiscordGuildDTO, Exception>
 
     suspend fun existDiscordGuildById(guildId: String): Boolean
 
@@ -38,13 +42,26 @@ class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRep
         }
     }
 
-    override suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): DiscordGuildDTO =
+    override suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): SuspendableResult<DiscordGuildDTO, Exception> =
         newSuspendedTransaction {
             DiscordGuilds.update({ DiscordGuilds.id eq discordGuild.guildId }) {
                 it[guildName] = discordGuild.guildName
                 it[symbolCommand] = discordGuild.symbolCommand
             }
-            return@newSuspendedTransaction discordGuild
+
+            commit()
+
+            return@newSuspendedTransaction SuspendableResult.of<DiscordGuildDTO, Exception> {
+                newSuspendedTransaction(
+                    context = Dispatchers.IO,
+                    transactionIsolation = TRANSACTION_SERIALIZABLE
+                ) {
+                    getDiscordGuildById(discordGuild.guildId)
+                        ?: throw Exception("Update Fail, DiscordGuild not found after update")
+                }
+            }.onFailure {
+                rollback()
+            }
         }
 
     override suspend fun existDiscordGuildById(guildId: String): Boolean =

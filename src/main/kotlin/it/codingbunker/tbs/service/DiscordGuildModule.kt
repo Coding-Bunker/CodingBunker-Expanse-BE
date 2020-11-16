@@ -6,9 +6,11 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import it.codingbunker.tbs.data.bean.guild.DiscordGuildDTO
-import it.codingbunker.tbs.data.bean.guild.DiscordGuildRoute
+import it.codingbunker.tbs.data.dto.DiscordGuildDTO
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
+import it.codingbunker.tbs.data.route.guild.DiscordGuildRoute
+import it.codingbunker.tbs.utils.onFailure
+import it.codingbunker.tbs.utils.onSuccess
 import org.koin.ktor.ext.inject
 
 @Suppress("unused")
@@ -79,9 +81,14 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
 
             val discordGuildUpdate = call.receive<DiscordGuildDTO>()
 
-            val discordGuild = discordRepository.updateDiscordGuild(discordGuildUpdate)
-
-            call.respond(HttpStatusCode.OK, discordGuild)
+            discordRepository
+                .updateDiscordGuild(discordGuildUpdate)
+                .onSuccess {
+                    call.respond(HttpStatusCode.OK, it)
+                }
+                .onFailure {
+                    call.respond(HttpStatusCode.InternalServerError)
+                }
         }
 
     }
