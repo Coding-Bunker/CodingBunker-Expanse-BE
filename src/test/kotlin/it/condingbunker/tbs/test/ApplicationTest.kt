@@ -93,7 +93,7 @@ class ApplicationTest : KoinTest {
                     installDiscordGuildModules()
                 }
             ) {
-                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
+                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild/") {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request.toJson())
                 }.apply {
@@ -123,7 +123,7 @@ class ApplicationTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
+                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild/") {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request.toJson())
                 }.apply {
@@ -150,7 +150,7 @@ class ApplicationTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
+                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild/") {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request.toJson())
                 }.apply {
@@ -170,7 +170,7 @@ class ApplicationTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
+                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild/") {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -192,7 +192,7 @@ class ApplicationTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild") {
+                handleRequest(HttpMethod.Put, "${Costant.BASE_API_URL}/discord/guild/") {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
