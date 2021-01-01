@@ -48,14 +48,7 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
         }
 
         get<DiscordGuildRoute.DiscordGuildRouteId> {
-            val discordGuildIdRequested = call.parameters[DiscordGuildRoute.DiscordGuildRouteId::guildId.name]
-
-            if (discordGuildIdRequested == null) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
-            val discordGuild = discordRepository.getDiscordGuildById(discordGuildIdRequested)
+            val discordGuild = discordRepository.getDiscordGuildById(it.guildId)
 
             if (discordGuild == null) {
                 call.respond(HttpStatusCode.NotFound)
@@ -65,9 +58,9 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
         }
 
         patch<DiscordGuildRoute.DiscordGuildRouteId> {
-            val discordGuildIdRequested = call.parameters[DiscordGuildRoute.DiscordGuildRouteId::guildId.name]
+            val discordGuildIdRequested = it.guildId
 
-            if (discordGuildIdRequested.isNullOrBlank()) {
+            if (discordGuildIdRequested.isBlank()) {
                 call.respond(HttpStatusCode.BadRequest)
                 return@patch
             }
@@ -89,6 +82,25 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
                 .onFailure {
                     call.respond(HttpStatusCode.InternalServerError)
                 }
+        }
+
+        delete<DiscordGuildRoute.DiscordGuildRouteId> {
+            val guildExist = discordRepository.existDiscordGuildById(it.guildId)
+
+            if (guildExist.not()) {
+                call.respond(HttpStatusCode.NotFound)
+                return@delete
+            }
+
+            discordRepository
+                .deleteDiscordGuildById(it.guildId)
+                .onSuccess {
+                    call.respond(HttpStatusCode.OK)
+                }.onFailure {
+                    //TODO Nuova Eccezione per la delete
+                    call.respond(HttpStatusCode.InternalServerError)
+                }
+
         }
 
     }

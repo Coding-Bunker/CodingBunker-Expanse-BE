@@ -7,11 +7,8 @@ import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.data.table.DiscordGuilds
 import it.codingbunker.tbs.utils.onFailure
 import kotlinx.coroutines.Dispatchers
-import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
-import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
-import org.jetbrains.exposed.sql.update
 import java.sql.Connection.TRANSACTION_SERIALIZABLE
 
 
@@ -23,6 +20,8 @@ interface DiscordRepositoryInterface {
     suspend fun existDiscordGuildById(guildId: String): Boolean
 
     suspend fun getDiscordGuildById(guildId: String): DiscordGuildDTO?
+
+    suspend fun deleteDiscordGuildById(guildId: String): SuspendableResult<Int, Exception>
 }
 
 class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRepositoryInterface {
@@ -88,4 +87,17 @@ class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRep
 
         }
 
+    override suspend fun deleteDiscordGuildById(guildId: String): SuspendableResult<Int, Exception> =
+        newSuspendedTransaction {
+            SuspendableResult.of<Int, Exception> {
+                newSuspendedTransaction {
+                    addLogger(Slf4jSqlDebugLogger)
+
+                    DiscordGuilds.deleteWhere { DiscordGuilds.id eq guildId }
+                }
+            }.onFailure {
+                rollback()
+                return@onFailure
+            }
+        }
 }

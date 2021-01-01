@@ -25,6 +25,7 @@ import org.koin.test.KoinTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class ApplicationTest : KoinTest {
     private lateinit var takaoSQLClient: TakaoSQLClient
@@ -324,6 +325,81 @@ class ApplicationTest : KoinTest {
                     setBody(request)
                 }.apply {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
+                }
+            }
+        }
+
+        @Test
+        fun `Delete guild, Result is deleted`() {
+            val serverId = "AZ1123"
+
+            val request = DiscordGuildDTO(
+                guildId = serverId,
+                symbolCommand = "%",
+                guildName = "codingBunka"
+            ).toJson()
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                insertMockGuild(serverId)
+
+                handleRequest(HttpMethod.Delete, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.OK, response.status())
+
+                    val discordRepo by inject<DiscordRepositoryInterface>()
+                    runBlocking {
+                        assertFalse(discordRepo.existDiscordGuildById(serverId))
+                    }
+                }
+            }
+        }
+
+        @Test
+        fun `Delete guild not exist, Result is error`() {
+            val serverId = "AZ1123"
+
+            val request = DiscordGuildDTO(
+                guildId = serverId,
+                symbolCommand = "%",
+                guildName = "codingBunka"
+            ).toJson()
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                handleRequest(HttpMethod.Delete, "${Costant.BASE_API_URL}/discord/guild/$serverId") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.NotFound, response.status())
+                }
+            }
+        }
+
+        @Test
+        fun `Delete guild empty serverID, Result is error`() {
+            val serverId = "AZ1123"
+
+            val request = DiscordGuildDTO(
+                guildId = serverId,
+                symbolCommand = "%",
+                guildName = "codingBunka"
+            ).toJson()
+
+            withRealTestApplication({
+                installDiscordGuildModules()
+            }) {
+                insertMockGuild(serverId)
+
+                handleRequest(HttpMethod.Delete, "${Costant.BASE_API_URL}/discord/guild/") {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.NotFound, response.status())
                 }
             }
         }
