@@ -17,7 +17,6 @@ plugins {
     id("com.github.gmazzo.buildconfig") version "2.0.2"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.0"
     id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
-//    id("koin") version "2.2.0-beta-1"
 }
 
 //group = "it.codingbunker.tbs"
@@ -58,8 +57,12 @@ buildConfig {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+
     implementation("io.ktor:ktor-server-tomcat:$ktor_version")
+
     implementation("ch.qos.logback:logback-classic:$logback_version")
+
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-html-builder:$ktor_version")
     implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41")
@@ -68,13 +71,11 @@ dependencies {
     implementation("io.ktor:ktor-metrics:$ktor_version")
     implementation("io.ktor:ktor-websockets:$ktor_version")
     implementation("io.ktor:ktor-jackson:$ktor_version")
-//    implementation("io.ktor:ktor-client-core:$ktor_version")
-//    implementation("io.ktor:ktor-client-core-jvm:$ktor_version")
-//    implementation("io.ktor:ktor-client-http-timeout:$ktor_version")
-//    implementation("io.ktor:ktor-client-json-jvm:$ktor_version")
-//    implementation("io.ktor:ktor-client-gson:$ktor_version")
-//    implementation("io.ktor:ktor-client-websockets:$ktor_version")
-//    implementation("io.ktor:ktor-client-logging-jvm:$ktor_version")
+
+    //KTOR Auth
+    implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation("io.ktor:ktor-auth-jwt:$ktor_version")
+
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
@@ -91,6 +92,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+    implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("org.postgresql:postgresql:42.2.18")
 
     testImplementation("com.h2database:h2:1.4.199")
@@ -100,6 +102,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
+
+    //crypt
+    implementation("com.google.crypto.tink:tink:1.5.0")
 }
 
 configurations.all {
@@ -115,6 +120,7 @@ kotlin.sourceSets["test"].resources.srcDirs("src/test/resources")
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_12.toString()
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
 }
 
 tasks.named<Test>("test") {
