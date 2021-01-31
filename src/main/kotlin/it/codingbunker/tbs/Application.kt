@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -14,7 +16,10 @@ import io.ktor.response.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.data.client.TakaoSQLClient
+import it.codingbunker.tbs.data.dto.ProfileDTO
+import it.codingbunker.tbs.data.route.sec.RoleBasedAuthorization
 import it.codingbunker.tbs.di.loadKoinModules
+import it.codingbunker.tbs.utils.JwtConfig
 import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
@@ -89,9 +94,28 @@ fun Application.mainModule(testing: Boolean = false) {
         masking = false
     }
 
-    install(ContentNegotiation) {
-//        defaultSerializer()
+    install(Authentication) {
+        val jwtConfig by inject<JwtConfig>()
 
+        jwt {
+            verifier(jwtConfig.jwtVerifier)
+            validate { jwtCredential ->
+                //TODO INSERIRE CONVERSIONE JWT + DECRYPT
+                jwtConfig.convertJWTCredential(jwtCredential)
+
+//                if (jwtCredential.payload.claims.contains(BotJWTDTO::profileType.name))
+//                    JWTPrincipal(jwtCredential.payload) else null
+            }
+        }
+    }
+
+    install(RoleBasedAuthorization) {
+        getRoles {
+            (it as ProfileDTO).role
+        }
+    }
+
+    install(ContentNegotiation) {
         jackson {
             registerKotlinModule()
             enable(SerializationFeature.INDENT_OUTPUT)

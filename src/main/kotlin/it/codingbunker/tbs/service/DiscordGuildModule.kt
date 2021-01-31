@@ -1,6 +1,7 @@
 package it.codingbunker.tbs.service
 
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.request.*
@@ -24,7 +25,7 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
     routing {
         if (testOrDebug) {
             trace {
-                application.log.warn(it.buildText())
+                application.log.info(it.buildText())
             }
         }
 
