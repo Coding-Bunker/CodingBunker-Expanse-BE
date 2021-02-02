@@ -6,16 +6,18 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.timestamp
+import java.time.Instant
 import java.util.*
 
 object Bots : UUIDTable() {
 	val botName = varchar("botName", 50)
-	val dateCreation = timestamp("botCreationDateTime")
+	val dateCreation = timestamp("botCreationDateTime").default(Instant.now())
 }
 
 class Bot(id: EntityID<UUID>) : UUIDEntity(id) {
 	companion object : UUIDEntityClass<Bot>(Bots)
 
+	var dateCreation: Instant by Bots.dateCreation
 	var botName: String by Bots.botName
 	var permissions by Role via BotsPermissions
 }
