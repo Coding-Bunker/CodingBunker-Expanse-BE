@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 class LoginRequest(
 	@JsonProperty("id", required = true)
 	var id: String,
-	@JsonProperty("accountType", required = true)
-	val accountType: String
+	@JsonProperty("profileType", required = true)
+	val profileType: String
 )
