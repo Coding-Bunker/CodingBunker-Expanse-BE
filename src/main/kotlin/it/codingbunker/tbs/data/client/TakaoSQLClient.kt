@@ -1,6 +1,7 @@
 package it.codingbunker.tbs.data.client
 
 import it.codingbunker.tbs.data.table.Bots
+import it.codingbunker.tbs.data.table.BotsPermissions
 import it.codingbunker.tbs.data.table.DiscordGuilds
 import it.codingbunker.tbs.data.table.Roles
 import org.jetbrains.exposed.sql.Database
@@ -29,7 +30,7 @@ class TakaoSQLClient(
 
     override suspend fun checkAndActivateDB() {
         newSuspendedTransaction {
-            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots)
+            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsPermissions)
         }
     }
 }
