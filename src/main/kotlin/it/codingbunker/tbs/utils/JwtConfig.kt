@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.coroutines.SuspendableResult
 import io.ktor.auth.jwt.*
 import it.codingbunker.tbs.data.dto.BotJWTDTO
 import kotlinx.datetime.*
@@ -31,8 +31,8 @@ class JwtConfig(
 	/**
 	 * Produce a token for this combination of User and Account
 	 */
-	fun makeTokenBot(bot: BotJWTDTO): Result<String, Exception> =
-		Result.of {
+	suspend fun makeTokenBot(bot: BotJWTDTO): SuspendableResult<String, Exception> =
+		SuspendableResult.of {
 			JWT.create()
 				.withSubject(subject)
 				.withIssuer(issuer)
