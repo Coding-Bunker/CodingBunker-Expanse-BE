@@ -2,17 +2,27 @@ package it.condingbunker.tbs.test.auth
 
 import io.ktor.application.*
 import io.ktor.config.*
+import io.ktor.http.*
+import io.ktor.server.testing.*
 import it.codingbunker.tbs.data.client.TakaoSQLClient
+import it.codingbunker.tbs.data.dto.ProfileDTO
+import it.codingbunker.tbs.data.dto.request.LoginRequest
+import it.codingbunker.tbs.data.table.Bot
+import it.codingbunker.tbs.data.table.Role
+import it.codingbunker.tbs.data.table.RoleType
 import it.codingbunker.tbs.mainModule
 import it.codingbunker.tbs.service.authenticationRoutes
 import it.codingbunker.tbs.utils.Costant
 import it.codingbunker.tbs.utils.getPropertyString
-import it.condingbunker.tbs.test.utilstest.loadConfig
+import it.condingbunker.tbs.test.utilstest.*
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.koin.test.KoinTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class AuthTest : KoinTest {
 
@@ -23,6 +33,20 @@ class AuthTest : KoinTest {
 		mainModule(true)
 		authenticationRoutes(true)
 	}
+
+	private fun TestApplicationEngine.addMockBot(): String =
+		transaction {
+			val role = Role.new(RoleType.BOT) {
+				this.roleName = RoleType.BOT
+			}
+
+			commit()
+
+			return@transaction Bot.new {
+				this.botName = "Bot Test"
+				this.permissions = SizedCollection(listOf(role))
+			}.id.value.toString()
+		}
 
 
 	@BeforeTest
@@ -48,21 +72,38 @@ class AuthTest : KoinTest {
 		}
 	}
 
-//	@Test
-//	fun `Test Auth`() {
-//		withRealTestApplication({
-//			installAuthModules()
-//		}) {
-//			val bot = insertMockBot()
-//
-//			handleRequest(HttpMethod.Post, "${Costant.Url.BASE_API_URL}/auth/login") {
-//				addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-//				setBody(
-//					LoginRequest(bot, ProfileDTO.ProfileType.BOT.name).toJson()
-//				)
-//			}.apply {
-//				val bearerToken = this.response.content
-//			}
-//		}
-//	}
+	@Test
+	fun `Test Auth Bot exist, Result Success`() {
+		withRealTestApplication({
+			installAuthModules()
+		}) {
+			val botId = addMockBot()
+
+			handleRequest(HttpMethod.Post, "${Costant.Url.BASE_API_URL}/auth/login") {
+				addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+				setBody(
+					LoginRequest(botId, ProfileDTO.ProfileType.BOT.name).toJson()
+				)
+			}.apply {
+				assertEquals(response.status(), HttpStatusCode.OK)
+				assert(this.response.content.isNullOrEmpty().not())
+			}
+		}
+	}
+
+	@Test
+	fun `Test Auth Bot Not Exist, Result Success`() {
+		withRealTestApplication({
+			installAuthModules()
+		}) {
+			handleRequest(HttpMethod.Post, "${Costant.Url.BASE_API_URL}/auth/login") {
+				addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+				setBody(
+					LoginRequest("abc1234", ProfileDTO.ProfileType.BOT.name).toJson()
+				)
+			}.apply {
+				assertEquals(response.status(), HttpStatusCode.Unauthorized)
+			}
+		}
+	}
 }

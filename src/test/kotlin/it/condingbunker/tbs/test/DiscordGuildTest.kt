@@ -96,7 +96,7 @@ class DiscordGuildTest : KoinTest {
                     installDiscordGuildModules()
                 }
             ) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -128,7 +128,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -157,7 +157,7 @@ class DiscordGuildTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -179,7 +179,7 @@ class DiscordGuildTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -203,7 +203,7 @@ class DiscordGuildTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -229,7 +229,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Get, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -250,7 +250,7 @@ class DiscordGuildTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Get, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -276,7 +276,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -305,7 +305,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -339,7 +339,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -365,7 +365,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -394,7 +394,7 @@ class DiscordGuildTest : KoinTest {
             withRealTestApplication({
                 installDiscordGuildModules()
             }) {
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -420,7 +420,7 @@ class DiscordGuildTest : KoinTest {
             }) {
                 insertMockGuild(serverId)
 
-                val jwt = addBotAndGetJWT()
+                val jwt = getBotJWT()
 
                 handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())

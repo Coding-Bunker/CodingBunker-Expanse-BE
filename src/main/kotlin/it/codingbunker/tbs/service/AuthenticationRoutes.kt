@@ -39,10 +39,10 @@ fun Application.authenticationRoutes(testOrDebug: Boolean = false) {
 								.onSuccess {
 									call.respondText { it }
 								}.onFailure {
-									TODO()
+									call.respond(HttpStatusCode.InternalServerError, "Error Creation JWT")
 								}
 						}.onFailure {
-							TODO()
+							call.respond(HttpStatusCode.Unauthorized, "Bot Id not found")
 						}
 				}
 				else -> {

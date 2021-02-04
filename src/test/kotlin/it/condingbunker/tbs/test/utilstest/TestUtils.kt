@@ -49,19 +49,13 @@ fun Map<String, Any>.toJson() = jacksonMapper.writeValueAsString(this)
 fun Any.toJson() = jacksonMapper
     .writeValueAsString(this)
 
-fun TestApplicationEngine.addBotAndGetJWT(): String {
+fun TestApplicationEngine.getBotJWT(): String {
     var botId = ""
 
     transaction {
-        val role = Role.new(RoleType.BOT) {
-            this.permissionName = RoleType.BOT
-        }
-
-        commit()
-
         botId = Bot.new {
-            this.botName = "Bot Test"
-            this.permissions = SizedCollection(listOf(role))
+            botName = "Bot Test"
+            permissions = SizedCollection(listOf(Role.findById(RoleType.BOT)!!))
         }.id.value.toString()
     }
 
