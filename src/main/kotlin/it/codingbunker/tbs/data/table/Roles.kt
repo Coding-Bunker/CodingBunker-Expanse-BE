@@ -22,9 +22,7 @@ class Role(id: EntityID<RoleType>) : Entity<RoleType>(id) {
 
 		fun initTableValue() {
 			transaction {
-				val missingPermission = Role.all().map {
-					it.id.value
-				} - RoleType.values()
+				val missingPermission = RoleType.values().toList() - Role.all().map { it.id.value }
 
 				missingPermission.forEach {
 					Role.new(it) {

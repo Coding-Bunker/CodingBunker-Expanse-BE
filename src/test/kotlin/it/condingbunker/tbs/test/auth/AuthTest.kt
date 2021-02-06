@@ -34,13 +34,9 @@ class AuthTest : KoinTest {
 		authenticationRoutes(true)
 	}
 
-	private fun TestApplicationEngine.addMockBot(): String =
+	private fun addMockBot(): String =
 		transaction {
-			val role = Role.new(RoleType.BOT) {
-				this.roleName = RoleType.BOT
-			}
-
-			commit()
+			val role = Role.findById(RoleType.BOT)!!
 
 			return@transaction Bot.new {
 				this.botName = "Bot Test"
