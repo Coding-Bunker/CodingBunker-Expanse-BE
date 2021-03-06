@@ -9,7 +9,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 enum class RoleType {
 	ADMIN,
-	BOT
+	BOT_DISCORD,
+	BOT_TWITCH,
+	USER
 }
 
 object Roles : IdTable<RoleType>() {

@@ -3,9 +3,9 @@ package it.codingbunker.tbs
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.kittinunf.result.coroutines.SuspendableResult
 import io.ktor.application.*
 import io.ktor.auth.*
-import io.ktor.auth.jwt.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -16,11 +16,12 @@ import io.ktor.response.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.data.client.TakaoSQLClient
-import it.codingbunker.tbs.data.dto.ProfileDTO
+import it.codingbunker.tbs.data.dto.principal.BotPrincipal
+import it.codingbunker.tbs.data.repo.BotRepository
 import it.codingbunker.tbs.data.route.sec.RoleBasedAuthorization
 import it.codingbunker.tbs.di.loadKoinModules
-import it.codingbunker.tbs.utils.CryptoInterface
-import it.codingbunker.tbs.utils.JwtConfig
+import it.codingbunker.tbs.utils.Costant
+import it.codingbunker.tbs.utils.getPropertyString
 import kotlinx.coroutines.runBlocking
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
@@ -96,27 +97,32 @@ fun Application.mainModule(testing: Boolean = false) {
 	}
 
 	install(Authentication) {
-		val jwtConfig by inject<JwtConfig>()
+		val botRepository by inject<BotRepository>()
+		basic {
+			realm = environment.config.getPropertyString(Costant.Authentication.REALM)
 
-		jwt {
-			verifier(jwtConfig.jwtVerifier)
-			validate { jwtCredential ->
-				jwtConfig.convertJWTCredential(jwtCredential)
+			validate { userPasswordCredential ->
+				val bot = botRepository.findBotByIdAndKey(userPasswordCredential.name, userPasswordCredential.password)
+
+				if (bot is SuspendableResult.Success) {
+					BotPrincipal(bot.value.id, bot.value.botRoles)
+				} else {
+					null
+				}
 			}
 		}
 	}
 
 	install(RoleBasedAuthorization) {
-		val cryptoInterface by inject<CryptoInterface>()
 
 		getRoles {
-			ProfileDTO
-				.ProfileType
-				.values()[(it as JWTPrincipal).payload.getClaim(ProfileDTO::profileType.name).asInt()]
-				.converter.convertCrypted(
-					jwtSource = it,
-					cryptoInterface
-				)?.role ?: setOf()
+			when (it) {
+				is BotPrincipal -> {
+					it.roles
+				}
+
+				else -> setOf()
+			}
 		}
 	}
 

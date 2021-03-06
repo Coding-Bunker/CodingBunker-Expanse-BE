@@ -32,16 +32,16 @@ fun Application.discordGuildRoutes(testOrDebug: Boolean = false) {
         }
 
         authenticate {
-            withAnyRole(RoleType.BOT) {
-                put<DiscordGuildRoute> {
-                    val discordGuild = call.receive<DiscordGuildDTO>()
+            withAnyRole(RoleType.BOT_DISCORD) {
+				put<DiscordGuildRoute> {
+					val discordGuild = call.receive<DiscordGuildDTO>()
 
-                    if (discordGuild.guildId.isBlank()
-                        || discordGuild.guildName.isBlank()
-                    ) {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@put
-                    }
+					if (discordGuild.guildId.isBlank()
+						|| discordGuild.guildName.isBlank()
+					) {
+						call.respond(HttpStatusCode.BadRequest)
+						return@put
+					}
 
                     if (discordRepository.existDiscordGuildById(discordGuild.guildId)) {
                         call.respond(HttpStatusCode.Conflict)

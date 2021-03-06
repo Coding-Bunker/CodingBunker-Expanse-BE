@@ -27,7 +27,7 @@ class TakaoSQLClient(
 
     override suspend fun checkAndActivateDB() {
         newSuspendedTransaction {
-            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsPermissions)
+            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsRoles)
             commit()
 
             Role.initTableValue()

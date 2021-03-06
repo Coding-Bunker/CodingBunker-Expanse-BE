@@ -9,13 +9,13 @@ import com.google.crypto.tink.aead.AesGcmKeyManager
 import java.util.*
 import kotlin.text.Charsets.UTF_8
 
-interface CryptoInterface {
+interface CryptoClientInterface {
 	fun encrypt(plainText: String): String
 
 	fun decrypt(cypherText: String): String
 }
 
-class CryptoClient(private val aadSecret: String) : CryptoInterface {
+class CryptoClientInterfaceImpl(private val aadSecret: String) : CryptoClientInterface {
 
 	private var deterministicAead: Aead
 

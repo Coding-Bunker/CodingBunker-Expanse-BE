@@ -11,19 +11,29 @@ import java.util.*
 
 object Bots : UUIDTable() {
 	val botName = varchar("botName", 50)
-	val dateCreation = timestamp("botCreationDateTime").default(Instant.now())
+	val botKey = varchar("botKey", 50)
+	val botDateCreation = timestamp("botCreationDateTime").default(Instant.now())
 }
 
 class Bot(id: EntityID<UUID>) : UUIDEntity(id) {
 	companion object : UUIDEntityClass<Bot>(Bots)
 
-	var dateCreation: Instant by Bots.dateCreation
 	var botName: String by Bots.botName
-	var permissions by Role via BotsPermissions
+	var botKey: String by Bots.botKey
+	var botDateCreation: Instant by Bots.botDateCreation
+	var botRoles by Role via BotsRoles
 }
 
-object BotsPermissions : Table() {
+object BotsRoles : Table() {
 	val bot = reference("bot", Bots)
-	val permission = reference("permission", Roles)
-	override val primaryKey = PrimaryKey(bot, permission)
+	val botRoles = reference("bot_roles", Roles)
+	override val primaryKey = PrimaryKey(bot, botRoles)
 }
+
+class BotDTO(
+	var id: String,
+	var botName: String,
+	var botKey: String,
+	var botDateCreation: Instant,
+	var botRoles: Set<RoleType>
+)

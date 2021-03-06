@@ -15,19 +15,16 @@ object Costant {
 		const val DRIVER_DB_KEY = "$BASE_DB_KEY.driver"
 	}
 
-	object Jwt {
-		private const val BASE_JWT_KEY = "ktor.jwt"
-
-		const val TIME_VALIDATION_JWT_KEY = "$BASE_JWT_KEY.timeValidation"
-		const val ISSUER_BOT_JWT_KEY = "$BASE_JWT_KEY.issuer"
-		const val SUBJECT_BOT_JWT_KEY = "$BASE_JWT_KEY.subject"
-		const val SECRET_BOT_JWT_KEY = "$BASE_JWT_KEY.secret"
-	}
-
 	object Secret {
 		private const val BASE_KEY = "ktor.secret"
 
 		const val AAD_CRYPT_SECRET_KEY = "$BASE_KEY.AAD_CRYPT_SECRET_KEY"
+	}
+
+	object Authentication {
+		private const val BASE_KEY = "ktor.authentication"
+
+		const val REALM = "${BASE_KEY}.realm"
 	}
 
 
