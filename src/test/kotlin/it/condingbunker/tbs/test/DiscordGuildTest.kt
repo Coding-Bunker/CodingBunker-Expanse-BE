@@ -10,7 +10,6 @@ import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
 import it.codingbunker.tbs.data.table.Bot
 import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.mainModule
-import it.codingbunker.tbs.service.authenticationRoutes
 import it.codingbunker.tbs.service.discordGuildRoutes
 import it.codingbunker.tbs.utils.Costant.Database.ADDRESS_DB_KEY
 import it.codingbunker.tbs.utils.Costant.Database.DRIVER_DB_KEY
@@ -82,7 +81,6 @@ class DiscordGuildTest : KoinTest {
 
 		private fun Application.installDiscordGuildModules() {
 			mainModule(true)
-			authenticationRoutes(true)
 			discordGuildRoutes(true)
 		}
 

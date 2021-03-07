@@ -1,10 +1,7 @@
 package it.codingbunker.tbs.data.repo
 
 import com.github.kittinunf.result.coroutines.SuspendableResult
-import it.codingbunker.tbs.data.table.Bot
-import it.codingbunker.tbs.data.table.BotDTO
-import it.codingbunker.tbs.data.table.Bots
-import it.codingbunker.tbs.data.table.Role
+import it.codingbunker.tbs.data.table.*
 import it.codingbunker.tbs.utils.onFailure
 import it.codingbunker.tbs.utils.sha256Base64
 import kotlinx.datetime.*
@@ -18,31 +15,46 @@ import java.util.UUID as UID
 interface BotRepository {
 	suspend fun existBotById(id: String): Boolean
 
-	suspend fun generateBot(botName: String, roleList: Set<Role>): Bot
+	suspend fun generateBot(botName: String, roleList: Set<RoleType>): BotDTO
 
 	suspend fun findBotByIdAndKey(id: String, key: String): SuspendableResult<BotDTO, Exception>
 
 	suspend fun deleteBotById(id: String): SuspendableResult<Boolean, Exception>
 }
 
-class BotRepositoryImpl() : BaseRepository(), BotRepository {
+class BotRepositoryImpl : BaseRepository(), BotRepository {
 
 	override suspend fun existBotById(id: String): Boolean {
 		return Bot.findById(UID.fromString(id)) != null
 	}
 
-	override suspend fun generateBot(botName: String, roleList: Set<Role>): Bot =
+	override suspend fun generateBot(botName: String, roleList: Set<RoleType>): BotDTO =
 		newSuspendedTransaction {
+
 			Bot.new(UID.randomUUID()) {
 				this.botName = botName
 				botDateCreation = Clock.System.now()
 					.toLocalDateTime(TimeZone.UTC)
 					.toInstant(TimeZone.UTC)
 					.toJavaInstant()
-				botRoles = SizedCollection(roleList)
+				botRoles = SizedCollection(
+					roleList.map {
+						Role[it]
+					}
+				)
 				botKey = id.value.toString().sha256Base64().run {
 					botName.sha256Base64(this)
 				}
+			}.run {
+				BotDTO(
+					id = this.id.value.toString(),
+					botKey = botKey,
+					botName = botName,
+					botDateCreation = botDateCreation,
+					botRoles = botRoles.map {
+						it.id.value
+					}.toSet()
+				)
 			}
 		}
 
@@ -63,7 +75,7 @@ class BotRepositoryImpl() : BaseRepository(), BotRepository {
 				} else {
 					result.first().run {
 						BotDTO(
-							id = id,
+							id = this.id.value.toString(),
 							botKey = botKey,
 							botName = botName,
 							botDateCreation = botDateCreation,
