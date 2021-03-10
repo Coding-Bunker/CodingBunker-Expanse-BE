@@ -12,6 +12,7 @@ import it.codingbunker.tbs.data.table.RoleType
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import java.util.*
 
 const val CONFIG_NAME: String = "application-test.conf"
 
@@ -40,16 +41,16 @@ fun createRealTestEnvironment(
 
 fun loadConfig(confName: String = CONFIG_NAME) = HoconApplicationConfig(ConfigFactory.load(confName))
 
-fun Map<String, Any>.toJson() = jacksonMapper.writeValueAsString(this)
+fun Map<String, Any>.toJson(): String = jacksonMapper.writeValueAsString(this)
 
-fun Any.toJson() = jacksonMapper
+fun Any.toJson(): String = jacksonMapper
     .writeValueAsString(this)
 
 fun getBotMock(): Bot {
     var botEntity: Bot? = null
 
     transaction {
-        botEntity = Bot.new {
+        botEntity = Bot.new(UUID.randomUUID()) {
             botName = "Bot Test"
             botKey = "Bot Key"
             botRoles = SizedCollection(listOf(Role.findById(RoleType.BOT_DISCORD)!!))

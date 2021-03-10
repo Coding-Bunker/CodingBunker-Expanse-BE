@@ -1,6 +1,7 @@
 package it.codingbunker.tbs
 
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.kittinunf.result.coroutines.SuspendableResult
@@ -17,6 +18,7 @@ import io.ktor.server.engine.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.data.client.TakaoSQLClient
 import it.codingbunker.tbs.data.dto.principal.BotPrincipal
+import it.codingbunker.tbs.data.dto.response.ExceptionResponse
 import it.codingbunker.tbs.data.repo.BotRepository
 import it.codingbunker.tbs.data.route.sec.RoleBasedAuthorization
 import it.codingbunker.tbs.di.loadKoinModules
@@ -55,7 +57,23 @@ fun Application.mainModule(testing: Boolean = false) {
 
 	install(StatusPages) {
 		exception<MissingKotlinParameterException> { cause ->
-			call.respond(HttpStatusCode.BadRequest)
+			call.respond(
+				HttpStatusCode.BadRequest,
+				ExceptionResponse(
+					cause::class.toString(),
+					cause.stackTraceToString()
+				)
+			)
+		}
+
+		exception<InvalidFormatException> { cause ->
+			call.respond(
+				HttpStatusCode.BadRequest,
+				ExceptionResponse(
+					cause::class.toString(),
+					cause.stackTraceToString()
+				)
+			)
 		}
 
 	}
@@ -102,7 +120,7 @@ fun Application.mainModule(testing: Boolean = false) {
 			realm = environment.config.getPropertyString(Costant.Authentication.REALM)
 
 			validate { userPasswordCredential ->
-				val bot = botRepository.findBotByIdAndKey(userPasswordCredential.name, userPasswordCredential.password)
+				val bot = botRepository.findBotById(userPasswordCredential.name)
 
 				if (bot is SuspendableResult.Success) {
 					BotPrincipal(bot.value.id, bot.value.botRoles)

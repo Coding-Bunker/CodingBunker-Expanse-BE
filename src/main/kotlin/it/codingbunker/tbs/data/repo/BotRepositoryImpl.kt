@@ -8,24 +8,27 @@ import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.util.UUID as UID
 
 interface BotRepository {
-	suspend fun existBotById(id: String): Boolean
+	suspend fun existBotById(botId: String): Boolean
 
 	suspend fun generateBot(botName: String, roleList: Set<RoleType>): BotDTO
 
-	suspend fun findBotByIdAndKey(id: String, key: String): SuspendableResult<BotDTO, Exception>
+	suspend fun findBotById(botId: String): SuspendableResult<BotDTO, Exception>
 
-	suspend fun deleteBotById(id: String): SuspendableResult<Boolean, Exception>
+	suspend fun deleteBotById(botId: String): SuspendableResult<Boolean, Exception>
 }
 
 class BotRepositoryImpl : BaseRepository(), BotRepository {
 
-	override suspend fun existBotById(id: String): Boolean {
-		return Bot.findById(UID.fromString(id)) != null
+	override suspend fun existBotById(botId: String): Boolean {
+		return newSuspendedTransaction {
+			Bot.find {
+				(Bots.id eq UID.fromString(botId))
+			}.empty().not()
+		}
 	}
 
 	override suspend fun generateBot(botName: String, roleList: Set<RoleType>): BotDTO =
@@ -33,6 +36,9 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
 
 			Bot.new(UID.randomUUID()) {
 				this.botName = botName
+				botKey = id.value.toString().sha256Base64().run {
+					botName.sha256Base64(this)
+				}
 				botDateCreation = Clock.System.now()
 					.toLocalDateTime(TimeZone.UTC)
 					.toInstant(TimeZone.UTC)
@@ -42,9 +48,6 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
 						Role[it]
 					}
 				)
-				botKey = id.value.toString().sha256Base64().run {
-					botName.sha256Base64(this)
-				}
 			}.run {
 				BotDTO(
 					id = this.id.value.toString(),
@@ -59,15 +62,14 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
 		}
 
 
-	override suspend fun findBotByIdAndKey(id: String, key: String): SuspendableResult<BotDTO, Exception> =
+	override suspend fun findBotById(botId: String): SuspendableResult<BotDTO, Exception> =
 		newSuspendedTransaction {
 			addLogger(Slf4jSqlDebugLogger)
 
 			SuspendableResult.of {
 
 				val result = Bot.find {
-					(Bots.id eq UID.fromString(id)) and
-							(Bots.botKey eq key)
+					Bots.id eq UID.fromString(botId)
 				}
 
 				if (result.empty()) {
@@ -89,9 +91,11 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
 			}
 		}
 
-	override suspend fun deleteBotById(id: String) = newSuspendedTransaction {
+	override suspend fun deleteBotById(botId: String) = newSuspendedTransaction {
 		SuspendableResult.of<Boolean, Exception> {
-			Bot.findById(UID.fromString(id))?.delete() ?: throw Exception("Bot not found")
+			Bot.find {
+				Bots.id eq UID.fromString(botId)
+			}.first().delete()
 			true
 		}.onFailure {
 			rollback()

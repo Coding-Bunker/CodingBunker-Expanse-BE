@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 import java.time.Instant
@@ -11,7 +12,7 @@ import java.util.*
 
 object Bots : UUIDTable() {
 	val botName = varchar("botName", 50)
-	val botKey = varchar("botKey", 50)
+	val botKey = varchar("botKey", 250)
 	val botDateCreation = timestamp("botCreationDateTime").default(Instant.now())
 }
 
@@ -25,7 +26,7 @@ class Bot(id: EntityID<UUID>) : UUIDEntity(id) {
 }
 
 object BotsRoles : Table() {
-	val bot = reference("bot", Bots)
+	val bot = reference("bot", Bots, onDelete = ReferenceOption.CASCADE)
 	val botRoles = reference("bot_roles", Roles)
 	override val primaryKey = PrimaryKey(bot, botRoles)
 }
