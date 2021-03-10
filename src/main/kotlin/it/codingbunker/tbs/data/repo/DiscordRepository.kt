@@ -1,7 +1,6 @@
 package it.codingbunker.tbs.data.repo
 
 import com.github.kittinunf.result.coroutines.SuspendableResult
-import it.codingbunker.tbs.data.client.TakaoSQLClient
 import it.codingbunker.tbs.data.dto.DiscordGuildDTO
 import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.data.table.DiscordGuilds
@@ -24,7 +23,7 @@ interface DiscordRepositoryInterface {
     suspend fun deleteDiscordGuildById(guildId: String): SuspendableResult<Int, Exception>
 }
 
-class DiscordRepository(private val takaoSQLClient: TakaoSQLClient) : DiscordRepositoryInterface {
+class DiscordRepository : BaseRepository(), DiscordRepositoryInterface {
 
     override suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO) {
         newSuspendedTransaction {
