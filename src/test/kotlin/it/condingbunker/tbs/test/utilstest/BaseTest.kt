@@ -2,9 +2,9 @@ package it.condingbunker.tbs.test.utilstest
 
 import io.ktor.application.*
 import io.ktor.config.*
-import it.codingbunker.tbs.data.client.TakaoSQLClient
-import it.codingbunker.tbs.utils.Costant
-import it.codingbunker.tbs.utils.getPropertyString
+import it.codingbunker.tbs.common.Costant
+import it.codingbunker.tbs.common.client.TakaoSQLClient
+import it.codingbunker.tbs.common.extension.getPropertyString
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
