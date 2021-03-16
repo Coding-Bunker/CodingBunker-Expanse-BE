@@ -6,8 +6,8 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import it.codingbunker.tbs.common.Costant
 import it.codingbunker.tbs.data.table.*
+import it.codingbunker.tbs.feature.managment.route.botManagmentRoutes
 import it.codingbunker.tbs.mainModule
-import it.codingbunker.tbs.service.botManagmentRoutes
 import it.condingbunker.tbs.test.utilstest.BaseTest
 import it.condingbunker.tbs.test.utilstest.getBotMock
 import it.condingbunker.tbs.test.utilstest.toJson
@@ -21,7 +21,6 @@ import java.util.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-
 
 class BotManagmentTest : BaseTest() {
 	private lateinit var config: HoconApplicationConfig
@@ -202,7 +201,6 @@ class BotManagmentTest : BaseTest() {
 							}.toList().isEmpty()
 						}
 					}
-
 				}
 			}
 		}
@@ -241,5 +239,4 @@ class BotManagmentTest : BaseTest() {
 			}
 		}
 	}
-
 }

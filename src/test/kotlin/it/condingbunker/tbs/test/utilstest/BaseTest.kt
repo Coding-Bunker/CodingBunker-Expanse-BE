@@ -31,7 +31,7 @@ abstract class BaseTest {
 
 		runBlocking {
 			transaction {
-				//TODO Sistemare Funzione per adeguamento in base al dialetto
+				// TODO Sistemare Funzione per adeguamento in base al dialetto
 				TransactionManager.current().exec("DROP ALL OBJECTS")
 			}
 		}

@@ -15,8 +15,8 @@ import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
 import it.codingbunker.tbs.data.table.Bot
 import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
+import it.codingbunker.tbs.feature.discord.route.discordGuildRoutes
 import it.codingbunker.tbs.mainModule
-import it.codingbunker.tbs.service.discordGuildRoutes
 import it.condingbunker.tbs.test.utilstest.getBotMock
 import it.condingbunker.tbs.test.utilstest.loadConfig
 import it.condingbunker.tbs.test.utilstest.toJson
@@ -36,7 +36,6 @@ import kotlin.test.assertFalse
 class DiscordGuildTest : KoinTest {
 	private lateinit var takaoSQLClient: TakaoSQLClient
 	private lateinit var config: HoconApplicationConfig
-
 
 	private fun TestApplicationEngine.handleRequest(
 		method: HttpMethod,
@@ -70,7 +69,7 @@ class DiscordGuildTest : KoinTest {
 
 		runBlocking {
 			transaction {
-				//TODO Sistemare Funzione per adeguamento in base al dialetto
+				// TODO Sistemare Funzione per adeguamento in base al dialetto
 				TransactionManager.current().exec("DROP ALL OBJECTS")
 			}
 		}
@@ -116,7 +115,7 @@ class DiscordGuildTest : KoinTest {
 			) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request.toJson())
 				}.apply {
@@ -148,7 +147,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request.toJson())
 				}.apply {
@@ -171,13 +170,12 @@ class DiscordGuildTest : KoinTest {
 				guildName = "codingBunky"
 			)
 
-
 			withRealTestApplication({
 				installDiscordGuildModules()
 			}) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request.toJson())
 				}.apply {
@@ -193,13 +191,12 @@ class DiscordGuildTest : KoinTest {
 				"guildName" to "codingBunky"
 			).toJson()
 
-
 			withRealTestApplication({
 				installDiscordGuildModules()
 			}) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -217,13 +214,12 @@ class DiscordGuildTest : KoinTest {
 				"symbolCommand" to "!"
 			).toJson()
 
-
 			withRealTestApplication({
 				installDiscordGuildModules()
 			}) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Put, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -249,7 +245,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Get, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Get, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 				}.apply {
 					assertEquals(HttpStatusCode.OK, response.status())
@@ -270,11 +266,10 @@ class DiscordGuildTest : KoinTest {
 			}) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Get, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Get, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 				}.apply {
 					assertEquals(HttpStatusCode.NotFound, response.status())
-
 				}
 			}
 		}
@@ -296,7 +291,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Patch, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -325,7 +320,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Patch, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -359,7 +354,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Patch, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Patch, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -385,7 +380,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -414,7 +409,7 @@ class DiscordGuildTest : KoinTest {
 			}) {
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild/$serverId", jwt) {
+				handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild/$serverId", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
@@ -440,7 +435,7 @@ class DiscordGuildTest : KoinTest {
 
 				val jwt = getBotMock()
 
-				handleRequest(HttpMethod.Delete, "${BASE_API_URL}/discord/guild", jwt) {
+				handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild", jwt) {
 					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
 					setBody(request)
 				}.apply {
