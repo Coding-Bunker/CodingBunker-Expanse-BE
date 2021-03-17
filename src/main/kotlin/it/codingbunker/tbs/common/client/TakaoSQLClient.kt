@@ -7,30 +7,26 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 interface TakaoSQLInterface {
 
-	suspend fun checkAndActivateDB()
+    suspend fun checkAndActivateDB()
 }
 
 class TakaoSQLClient(
-	serverAddress: String,
-	driverDB: String,
-	usernameDB: String,
-	passwordDB: String
+    serverAddress: String,
+    driverDB: String,
+    usernameDB: String,
+    passwordDB: String
 ) : TakaoSQLInterface {
 
-	val takaoDB =
-		Database.connect(
-			url = serverAddress,
-			driver = driverDB,
-			user = usernameDB,
-			password = passwordDB
-		)
+    val takaoDB = Database.connect(
+        url = serverAddress, driver = driverDB, user = usernameDB, password = passwordDB
+    )
 
-	override suspend fun checkAndActivateDB() {
-		newSuspendedTransaction {
-			SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsRoles)
-			commit()
+    override suspend fun checkAndActivateDB() {
+        newSuspendedTransaction {
+            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsRoles)
+            commit()
 
-			Role.initTableValue()
-		}
-	}
+            Role.initTableValue()
+        }
+    }
 }

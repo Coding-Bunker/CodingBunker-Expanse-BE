@@ -1,6 +1,6 @@
-name: Java CI
+name: Kotlin Verification CI
 
-on: [ push ]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -13,8 +13,16 @@ jobs:
         with:
           java-version: 14
       - name: Build with Gradle
-        run: ./gradlew build -x ktlintMainSourceSetCheck -x ktlintTestSourceSetCheck
-      - name: Ktlint Check
-        run: ./gradlew ktlintCheck
+        run: ./gradlew build -x lintKotlinMain -x lintKotlinTest -x lintKotlin
+      - name: Ktlint format
+        run: ./gradlew formatKotlin
+      - name: Ktlint check
+        run: ./gradlew lintKotlin
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: Apply formatting changes
+          commit_user_name: TakaoBot
+          branch: ${{ github.head_ref }}
       - name: Launch Test
         run: ./gradlew test
