@@ -41,4 +41,3 @@ fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment): KoinAp
 
     return modules(listOf(dataModule, utilModule))
 }
-

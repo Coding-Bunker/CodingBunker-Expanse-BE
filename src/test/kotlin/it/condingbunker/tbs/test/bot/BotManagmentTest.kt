@@ -23,220 +23,215 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class BotManagmentTest : BaseTest() {
-	private lateinit var config: HoconApplicationConfig
+    private lateinit var config: HoconApplicationConfig
 
-	private fun TestApplicationEngine.handleRequest(
-		method: HttpMethod,
-		uri: String,
-		bot: Bot,
-		setup: TestApplicationRequest.() -> Unit = {}
-	): TestApplicationCall {
-		val basic = Base64.getEncoder().encodeToString(
-			"${bot.id}:${bot.botKey}".toByteArray()
-		)
-		return handleRequest(method, uri) {
-			setup()
-			addHeader(HttpHeaders.Authorization, "Basic $basic")
-		}
-	}
+    private fun TestApplicationEngine.handleRequest(
+        method: HttpMethod,
+        uri: String,
+        bot: Bot,
+        setup: TestApplicationRequest.() -> Unit = {}
+    ): TestApplicationCall {
+        val basic = Base64.getEncoder().encodeToString(
+            "${bot.id}:${bot.botKey}".toByteArray()
+        )
+        return handleRequest(method, uri) {
+            setup()
+            addHeader(HttpHeaders.Authorization, "Basic $basic")
+        }
+    }
 
-	override fun Application.installModuleToTest() {
-		mainModule(true)
-		botManagmentRoutes(true)
-	}
+    override fun Application.installModuleToTest() {
+        mainModule(true)
+        botManagmentRoutes(true)
+    }
 
-	private fun getMockBotAdmin(): Bot {
-		var botEntity: Bot? = null
+    private fun getMockBotAdmin(): Bot {
+        var botEntity: Bot? = null
 
-		runBlocking {
-			transaction {
-				botEntity = Bot.new(UUID.randomUUID()) {
-					botKey = "abc"
-					botName = "abc"
-					botRoles = SizedCollection(Role[RoleType.ADMIN])
-				}
-			}
-		}
+        runBlocking {
+            transaction {
+                botEntity = Bot.new(UUID.randomUUID()) {
+                    botKey = "abc"
+                    botName = "abc"
+                    botRoles = SizedCollection(Role[RoleType.ADMIN])
+                }
+            }
+        }
 
-		return botEntity!!
-	}
+        return botEntity!!
+    }
 
-	@Nested
-	inner class BotCreateTest {
-		@Test
-		fun `Create Bot with all parameters, Result is created`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getMockBotAdmin()
+    @Nested
+    inner class BotCreateTest {
+        @Test
+        fun `Create Bot with all parameters, Result is created`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getMockBotAdmin()
 
-				val request = mapOf(
-					"botName" to "Bot Test",
-					"roleList" to listOf(
-						0
-					)
-				).toJson()
+                val request = mapOf(
+                    "botName" to "Bot Test",
+                    "roleList" to listOf(
+                        0
+                    )
+                ).toJson()
 
-				handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-					setBody(request)
-				}.apply {
-					assertEquals(HttpStatusCode.Created, response.status())
-				}
-			}
-		}
+                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.Created, response.status())
+                }
+            }
+        }
 
-		@Test
-		fun `Create Bot with botName blank, Result is BadRequest`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getMockBotAdmin()
+        @Test
+        fun `Create Bot with botName blank, Result is BadRequest`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getMockBotAdmin()
 
-				val request = mapOf(
-					"botName" to "",
-					"roleList" to listOf(
-						0
-					)
-				).toJson()
+                val request = mapOf(
+                    "botName" to "",
+                    "roleList" to listOf(
+                        0
+                    )
+                ).toJson()
 
-				handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-					setBody(request)
-				}.apply {
-					assertEquals(HttpStatusCode.BadRequest, response.status())
-				}
-			}
-		}
+                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
 
-		@Test
-		fun `Create Bot with roleList empty, Result is BadRequest`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getMockBotAdmin()
+        @Test
+        fun `Create Bot with roleList empty, Result is BadRequest`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getMockBotAdmin()
 
-				val request = mapOf(
-					"botName" to "Ciao",
-					"roleList" to listOf<Int>()
-				).toJson()
+                val request = mapOf(
+                    "botName" to "Ciao", "roleList" to listOf<Int>()
+                ).toJson()
 
-				handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-					setBody(request)
-				}.apply {
-					assertEquals(HttpStatusCode.BadRequest, response.status())
-				}
-			}
-		}
+                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
 
-		@Test
-		fun `Create Bot with roleList null, Result is BadRequest`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getMockBotAdmin()
+        @Test
+        fun `Create Bot with roleList null, Result is BadRequest`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getMockBotAdmin()
 
-				val request = mapOf(
-					"botName" to "Ciao",
-					"roleList" to null
-				).toJson()
+                val request = mapOf(
+                    "botName" to "Ciao", "roleList" to null
+                ).toJson()
 
-				handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-					setBody(request)
-				}.apply {
-					assertEquals(HttpStatusCode.BadRequest, response.status())
-				}
-			}
-		}
+                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
 
-		@Test
-		fun `Create Bot with role not exist, Result is BadRequest`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getMockBotAdmin()
+        @Test
+        fun `Create Bot with role not exist, Result is BadRequest`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getMockBotAdmin()
 
-				val request = mapOf(
-					"botName" to "",
-					"roleList" to listOf(10000)
-				).toJson()
+                val request = mapOf(
+                    "botName" to "", "roleList" to listOf(10000)
+                ).toJson()
 
-				handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-					setBody(request)
-				}.apply {
-					assertEquals(HttpStatusCode.BadRequest, response.status())
-				}
-			}
-		}
-	}
+                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                    setBody(request)
+                }.apply {
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
+    }
 
-	@Nested
-	inner class BotDeleteTest {
-		@Test
-		fun `Delete Bot, Result is OK deleted`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val bot = getBotMock()
-				val botAdmin = getMockBotAdmin()
+    @Nested
+    inner class BotDeleteTest {
+        @Test
+        fun `Delete Bot, Result is OK deleted`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val bot = getBotMock()
+                val botAdmin = getMockBotAdmin()
 
-				handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/${bot.id}", botAdmin) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-				}.apply {
-					assertEquals(HttpStatusCode.OK, response.status())
+                handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/${bot.id}", botAdmin) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }.apply {
+                    assertEquals(HttpStatusCode.OK, response.status())
 
-					transaction {
-						assertTrue {
-							BotsRoles.select {
-								(BotsRoles.bot eq bot.id)
-							}.toList().isEmpty()
-						}
+                    transaction {
+                        assertTrue {
+                            BotsRoles.select {
+                                (BotsRoles.bot eq bot.id)
+                            }.toList().isEmpty()
+                        }
 
-						assertTrue {
-							Bots.select {
-								Bots.id eq bot.id
-							}.toList().isEmpty()
-						}
-					}
-				}
-			}
-		}
+                        assertTrue {
+                            Bots.select {
+                                Bots.id eq bot.id
+                            }.toList().isEmpty()
+                        }
+                    }
+                }
+            }
+        }
 
-		@Test
-		fun `Delete Bot with bot id empty, Result is BadRequest`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val botAdmin = getMockBotAdmin()
+        @Test
+        fun `Delete Bot with bot id empty, Result is BadRequest`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val botAdmin = getMockBotAdmin()
 
-				handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/", botAdmin) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-				}.apply {
-					assertEquals(HttpStatusCode.BadRequest, response.status())
-				}
-			}
-		}
+                handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/", botAdmin) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }.apply {
+                    assertEquals(HttpStatusCode.BadRequest, response.status())
+                }
+            }
+        }
 
-		@Test
-		fun `Delete Bot with bot id empty, Result is NotFound`() {
-			withRealTestApplication({
-				installModuleToTest()
-			}) {
-				val botAdmin = getMockBotAdmin()
+        @Test
+        fun `Delete Bot with bot id empty, Result is NotFound`() {
+            withRealTestApplication({
+                installModuleToTest()
+            }) {
+                val botAdmin = getMockBotAdmin()
 
-				handleRequest(
-					HttpMethod.Delete,
-					"${Costant.Url.BASE_API_URL}/managment/bot/${UUID.randomUUID()}",
-					botAdmin
-				) {
-					addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-				}.apply {
-					assertEquals(HttpStatusCode.NotFound, response.status())
-				}
-			}
-		}
-	}
+                handleRequest(
+                    HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/${UUID.randomUUID()}", botAdmin
+                ) {
+                    addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                }.apply {
+                    assertEquals(HttpStatusCode.NotFound, response.status())
+                }
+            }
+        }
+    }
 }

@@ -10,35 +10,31 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 enum class RoleType {
-	ADMIN,
-	BOT_DISCORD,
-	BOT_TWITCH,
-	USER
+    ADMIN, BOT_DISCORD, BOT_TWITCH, USER
 }
 
 object Roles : IdTable<RoleType>() {
-	var roleName = enumerationByName("role_name", 200, RoleType::class)
-	override var id: Column<EntityID<RoleType>> = enumeration("role_id", RoleType::class).entityId()
+    var roleName = enumerationByName("role_name", 200, RoleType::class)
+    override var id: Column<EntityID<RoleType>> = enumeration("role_id", RoleType::class).entityId()
 }
 
 class Role(id: EntityID<RoleType>) : Entity<RoleType>(id) {
-	companion object : EntityClass<RoleType, Role>(Roles) {
+    companion object : EntityClass<RoleType, Role>(Roles) {
 
-		fun initTableValue() {
-			transaction {
-				val missingPermission = RoleType.values().toList() - Role.all().map { it.id.value }
+        fun initTableValue() {
+            transaction {
+                val missingPermission = RoleType.values().toList() - Role.all().map { it.id.value }
 
-				missingPermission.forEach {
-					Role.new(it) {
-						roleName = it
-					}
+                missingPermission.forEach {
+                    Role.new(it) {
+                        roleName = it
+                    }
 
-					commit()
-				}
-			}
-		}
+                    commit()
+                }
+            }
+        }
+    }
 
-	}
-
-	var roleName by Roles.roleName
+    var roleName by Roles.roleName
 }

@@ -23,72 +23,68 @@ import java.util.*
 @Location("${Costant.Url.BASE_API_URL}/managment/bot")
 class BotManagmentRoute {
 
-	@Location("/edit")
-	class Edit
+    @Location("/edit")
+    class Edit(val parent: BotManagmentRoute)
 
-	@Location("/{botId}")
-	class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String)
+    @Location("/{botId}")
+    class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String)
 }
 
 fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
 
-	val botRepository by inject<BotRepository>()
+    val botRepository by inject<BotRepository>()
 
-	routing {
-		if (testOrDebug) {
-			trace {
-				application.log.info(it.buildText())
-			}
-		}
+    routing {
+        if (testOrDebug) {
+            trace {
+                application.log.info(it.buildText())
+            }
+        }
 
-		authenticate {
-			withAnyRole(RoleType.ADMIN) {
-				put<BotManagmentRoute.Edit> {
-					val discordGuild = call.receive<BotCreateRequest>()
+        authenticate {
+            withAnyRole(RoleType.ADMIN) {
+                put<BotManagmentRoute.Edit> {
+                    val discordGuild = call.receive<BotCreateRequest>()
 
-					if (discordGuild.roleList.isEmpty() || discordGuild.botName.isBlank()) {
-						call.respond(HttpStatusCode.BadRequest)
-						return@put
-					}
+                    if (discordGuild.roleList.isEmpty() || discordGuild.botName.isBlank()) {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@put
+                    }
 
-					val result = botRepository.generateBot(
-						discordGuild.botName,
-						discordGuild.roleList
-					)
+                    val result = botRepository.generateBot(
+                        discordGuild.botName, discordGuild.roleList
+                    )
 
-					call.respond(
-						HttpStatusCode.Created,
-						BotIdKeyDTO(
-							result.id,
-							result.botKey
-						)
-					)
-				}
+                    call.respond(
+                        HttpStatusCode.Created,
+                        BotIdKeyDTO(
+                            result.id, result.botKey
+                        )
+                    )
+                }
 
-				delete<BotManagmentRoute.BotManagmentRouteId> {
-					if (it.botId.isBlank()) {
-						call.respond(HttpStatusCode.BadRequest)
-						return@delete
-					}
+                delete<BotManagmentRoute.BotManagmentRouteId> {
+                    if (it.botId.isBlank()) {
+                        call.respond(HttpStatusCode.BadRequest)
+                        return@delete
+                    }
 
-					val exist = botRepository.existBotById(it.botId)
+                    val exist = botRepository.existBotById(it.botId)
 
-					if (exist) {
-						botRepository.deleteBotById(it.botId)
-							.onSuccess {
-								call.respond(HttpStatusCode.OK)
-							}.onFailure { ex ->
-								call.respond(
-									HttpStatusCode.InternalServerError,
-									ExceptionResponse(ex::class.toString(), ex.stackTraceToString())
-								)
-							}
-					} else {
-						call.respond(HttpStatusCode.NotFound)
-					}
-				}
-			}
-		}
-	}
-
+                    if (exist) {
+                        botRepository.deleteBotById(it.botId).onSuccess {
+                            call.respond(HttpStatusCode.OK)
+                        }.onFailure { ex ->
+                            call.respond(
+                                HttpStatusCode.InternalServerError,
+                                ExceptionResponse(ex::class.toString(), ex.stackTraceToString())
+                            )
+                        }
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                }
+            }
+        }
+    }
 }

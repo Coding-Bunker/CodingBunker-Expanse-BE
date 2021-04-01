@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -15,7 +14,7 @@ plugins {
 	idea
 	kotlin("jvm") version "1.4.10"
 	id("com.github.gmazzo.buildconfig") version "2.0.2"
-	id("org.jlleitschuh.gradle.ktlint") version "9.4.0"
+	id("org.jmailen.kotlinter") version "3.3.0"
 	id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
 }
 
@@ -38,7 +37,6 @@ buildscript {
 	dependencies {
 		classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlin_version")
 		classpath("org.koin:koin-gradle-plugin:$koin_version")
-		classpath("org.jlleitschuh.gradle:ktlint-gradle:10.0.0")
 	}
 }
 
@@ -126,20 +124,8 @@ tasks.named<Test>("test") {
 	useJUnitPlatform()
 }
 
-ktlint {
-	debug.set(true)
-	verbose.set(true)
-	outputToConsole.set(true)
-
-	additionalEditorconfigFile.set(file(".editorconfig"))
-
-	disabledRules.apply {
-		add("no-wildcard-imports")
-	}
-
-	reporters {
-		reporter(ReporterType.PLAIN)
-		reporter(ReporterType.CHECKSTYLE)
-		reporter(ReporterType.HTML)
-	}
+kotlinter{
+	disabledRules = arrayOf(
+		"no-wildcard-imports"
+	)
 }

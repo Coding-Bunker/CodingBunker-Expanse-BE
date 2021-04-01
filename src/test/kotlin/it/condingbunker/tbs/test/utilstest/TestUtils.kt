@@ -32,19 +32,17 @@ fun <R> withRealTestApplication(
 fun createRealTestEnvironment(
     confName: String = CONFIG_NAME,
     configure: ApplicationEngineEnvironmentBuilder.() -> Unit = {}
-): ApplicationEngineEnvironment =
-    applicationEngineEnvironment {
-        config = loadConfig(confName)
-        log = LoggerFactory.getLogger("ktor.test")
-        configure()
-    }
+): ApplicationEngineEnvironment = applicationEngineEnvironment {
+    config = loadConfig(confName)
+    log = LoggerFactory.getLogger("ktor.test")
+    configure()
+}
 
 fun loadConfig(confName: String = CONFIG_NAME) = HoconApplicationConfig(ConfigFactory.load(confName))
 
 fun Map<String, Any>.toJson(): String = jacksonMapper.writeValueAsString(this)
 
-fun Any.toJson(): String = jacksonMapper
-    .writeValueAsString(this)
+fun Any.toJson(): String = jacksonMapper.writeValueAsString(this)
 
 fun getBotMock(): Bot {
     var botEntity: Bot? = null
