@@ -1,30 +1,28 @@
 package it.codingbunker.tbs
 
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.kittinunf.result.coroutines.SuspendableResult
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
-import io.ktor.jackson.*
 import io.ktor.locations.*
-import io.ktor.request.*
 import io.ktor.response.*
+import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.common.Costant
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.di.loadKoinModules
 import it.codingbunker.tbs.common.extension.getPropertyString
+import it.codingbunker.tbs.common.feature.Logging
 import it.codingbunker.tbs.common.feature.RoleBasedAuthorization
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
 import it.codingbunker.tbs.feature.managment.model.BotPrincipal
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
 import org.koin.logger.slf4jLogger
@@ -49,22 +47,23 @@ fun Application.mainModule(testing: Boolean = false) {
         }
     }
 
+    install(CallId)
     install(CallLogging) {
-        level = Level.DEBUG
-        filter { call -> call.request.path().startsWith("/") }
+        level = Level.TRACE
+    }
+    install(DoubleReceive) {
+        receiveEntireContent = true
+    }
+    install(Logging) {
+        logRequests = true
+        logResponses = true
+        logFullUrl = true
+        logBody = true
+        logHeaders = true
     }
 
     install(StatusPages) {
-        exception<MissingKotlinParameterException> { cause ->
-            call.respond(
-                HttpStatusCode.BadRequest,
-                ExceptionResponse(
-                    cause::class.toString(), cause.stackTraceToString()
-                )
-            )
-        }
-
-        exception<InvalidFormatException> { cause ->
+        exception<SerializationException> { cause ->
             call.respond(
                 HttpStatusCode.BadRequest,
                 ExceptionResponse(
@@ -141,10 +140,9 @@ fun Application.mainModule(testing: Boolean = false) {
     }
 
     install(ContentNegotiation) {
-        jackson {
-            registerKotlinModule()
-            enable(SerializationFeature.INDENT_OUTPUT)
-        }
+        json(Json {
+            prettyPrint = true
+        })
     }
 
     /*

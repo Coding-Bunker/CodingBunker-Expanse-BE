@@ -1,8 +1,11 @@
 package it.codingbunker.tbs.feature.managment.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.Required
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class BotIdKeyDTO(
-    @JsonProperty("botId", required = true) var botId: String,
-    @JsonProperty("botKey", required = true) var botKey: String
+    @SerialName("botId") @Required var botId: String,
+    @SerialName("botKey") @Required var botKey: String
 )

@@ -17,11 +17,9 @@ import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
 import it.codingbunker.tbs.feature.discord.route.discordGuildRoutes
 import it.codingbunker.tbs.mainModule
-import it.condingbunker.tbs.test.utilstest.getBotMock
-import it.condingbunker.tbs.test.utilstest.loadConfig
-import it.condingbunker.tbs.test.utilstest.toJson
-import it.condingbunker.tbs.test.utilstest.withRealTestApplication
+import it.condingbunker.tbs.test.utilstest.*
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.encodeToString
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.Nested
@@ -111,7 +109,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request.toJson())
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.Created, response.status())
 
@@ -141,7 +139,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request.toJson())
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.Conflict, response.status())
 
@@ -167,7 +165,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Put, "$BASE_API_URL/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request.toJson())
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
                 }
@@ -222,7 +220,9 @@ class DiscordGuildTest : KoinTest {
 
             val responseJSON = DiscordGuildDTO(
                 guildId = serverId, symbolCommand = "!", guildName = "codingBunky"
-            ).toJson()
+            ).run {
+                jsonEncoder.encodeToString(this)
+            }
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -265,7 +265,7 @@ class DiscordGuildTest : KoinTest {
 
             val request = DiscordGuildDTO(
                 guildId = serverId, symbolCommand = "%", guildName = "codingBunka"
-            ).toJson()
+            )
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -276,11 +276,12 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Patch, "$BASE_API_URL/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request)
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.OK, response.status())
                     assertEquals(
-                        request, response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
+                        jsonEncoder.encodeToString(request),
+                        response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
                     )
                 }
             }
@@ -309,7 +310,9 @@ class DiscordGuildTest : KoinTest {
                     assertEquals(
                         DiscordGuildDTO(
                             guildId = serverId, symbolCommand = "%", guildName = "codingBunka"
-                        ).toJson(),
+                        ).run {
+                            jsonEncoder.encodeToString(this)
+                        },
                         response.content.toString().replace(Regex("\n"), "").replace(Regex("\\s+"), "")
                     )
                 }
@@ -322,7 +325,7 @@ class DiscordGuildTest : KoinTest {
 
             val request = DiscordGuildDTO(
                 guildId = "", symbolCommand = "%", guildName = "codingBunka"
-            ).toJson()
+            )
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -333,7 +336,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Patch, "$BASE_API_URL/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request)
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.InternalServerError, response.status())
                 }
@@ -346,7 +349,7 @@ class DiscordGuildTest : KoinTest {
 
             val request = DiscordGuildDTO(
                 guildId = serverId, symbolCommand = "%", guildName = "codingBunka"
-            ).toJson()
+            )
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -357,7 +360,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request)
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.OK, response.status())
 
@@ -375,7 +378,7 @@ class DiscordGuildTest : KoinTest {
 
             val request = DiscordGuildDTO(
                 guildId = serverId, symbolCommand = "%", guildName = "codingBunka"
-            ).toJson()
+            )
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -384,7 +387,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild/$serverId", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request)
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.NotFound, response.status())
                 }
@@ -397,7 +400,7 @@ class DiscordGuildTest : KoinTest {
 
             val request = DiscordGuildDTO(
                 guildId = serverId, symbolCommand = "%", guildName = "codingBunka"
-            ).toJson()
+            )
 
             withRealTestApplication({
                 installDiscordGuildModules()
@@ -408,7 +411,7 @@ class DiscordGuildTest : KoinTest {
 
                 handleRequest(HttpMethod.Delete, "$BASE_API_URL/discord/guild", jwt) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-                    setBody(request)
+                    setBody(jsonEncoder.encodeToString(request))
                 }.apply {
                     assertEquals(HttpStatusCode.NotFound, response.status())
                 }

@@ -1,9 +1,12 @@
 package it.codingbunker.tbs.feature.discord.model
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.Required
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class DiscordGuildDTO(
-    @JsonProperty("guildId", required = true) var guildId: String,
-    @JsonProperty("guildName", required = true) var guildName: String,
-    @JsonProperty("symbolCommand", required = true, defaultValue = "%") var symbolCommand: String = "%"
+    @SerialName("guildId") @Required var guildId: String,
+    @SerialName("guildName") @Required var guildName: String,
+    @SerialName("symbolCommand") var symbolCommand: String = "%"
 )

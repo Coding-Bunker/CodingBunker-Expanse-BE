@@ -1,6 +1,6 @@
-package it.codingbunker.tbs.data.table
+package it.codingbunker.tbs.feature.managment.table
 
-import com.fasterxml.jackson.annotation.JsonFormat
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.transactions.transaction
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@Serializable
 enum class RoleType {
     ADMIN, BOT_DISCORD, BOT_TWITCH, USER
 }

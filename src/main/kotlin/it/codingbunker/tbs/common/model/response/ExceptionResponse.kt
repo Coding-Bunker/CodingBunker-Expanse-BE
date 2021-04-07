@@ -1,8 +1,10 @@
 package it.codingbunker.tbs.common.model.response
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ExceptionResponse(
-    @JsonProperty("exception") val exception: String,
-    @JsonProperty("cause") val cause: String
+    @SerialName("exception") val exception: String,
+    @SerialName("cause") val cause: String
 )

@@ -1,5 +1,8 @@
 package it.codingbunker.tbs.data.table
 
+import it.codingbunker.tbs.feature.managment.table.Role
+import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.codingbunker.tbs.feature.managment.table.Roles
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

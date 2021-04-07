@@ -5,8 +5,12 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import it.codingbunker.tbs.common.Costant
-import it.codingbunker.tbs.data.table.*
+import it.codingbunker.tbs.data.table.Bot
+import it.codingbunker.tbs.data.table.Bots
+import it.codingbunker.tbs.data.table.BotsRoles
 import it.codingbunker.tbs.feature.managment.route.botManagmentRoutes
+import it.codingbunker.tbs.feature.managment.table.Role
+import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.mainModule
 import it.condingbunker.tbs.test.utilstest.BaseTest
 import it.condingbunker.tbs.test.utilstest.getBotMock
@@ -73,7 +77,7 @@ class BotManagmentTest : BaseTest() {
                 val request = mapOf(
                     "botName" to "Bot Test",
                     "roleList" to listOf(
-                        0
+                        "ADMIN"
                     )
                 ).toJson()
 
@@ -96,7 +100,7 @@ class BotManagmentTest : BaseTest() {
                 val request = mapOf(
                     "botName" to "",
                     "roleList" to listOf(
-                        0
+                        "ADMIN"
                     )
                 ).toJson()
 
@@ -117,7 +121,7 @@ class BotManagmentTest : BaseTest() {
                 val bot = getMockBotAdmin()
 
                 val request = mapOf(
-                    "botName" to "Ciao", "roleList" to listOf<Int>()
+                    "botName" to "Ciao", "roleList" to listOf<String>()
                 ).toJson()
 
                 handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
@@ -157,7 +161,7 @@ class BotManagmentTest : BaseTest() {
                 val bot = getMockBotAdmin()
 
                 val request = mapOf(
-                    "botName" to "", "roleList" to listOf(10000)
+                    "botName" to "", "roleList" to listOf("ABC")
                 ).toJson()
 
                 handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {

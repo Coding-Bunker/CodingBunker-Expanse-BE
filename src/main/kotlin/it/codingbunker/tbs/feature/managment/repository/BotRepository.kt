@@ -4,7 +4,11 @@ import com.github.kittinunf.result.coroutines.SuspendableResult
 import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.sha256Base64
 import it.codingbunker.tbs.common.repository.BaseRepository
-import it.codingbunker.tbs.data.table.*
+import it.codingbunker.tbs.data.table.Bot
+import it.codingbunker.tbs.data.table.BotDTO
+import it.codingbunker.tbs.data.table.Bots
+import it.codingbunker.tbs.feature.managment.table.Role
+import it.codingbunker.tbs.feature.managment.table.RoleType
 import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger

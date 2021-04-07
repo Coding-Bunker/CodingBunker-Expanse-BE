@@ -7,18 +7,16 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.util.*
 import it.codingbunker.tbs.common.Costant
 import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
-import it.codingbunker.tbs.data.table.RoleType
 import it.codingbunker.tbs.feature.managment.model.BotIdKeyDTO
 import it.codingbunker.tbs.feature.managment.model.request.BotCreateRequest
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
+import it.codingbunker.tbs.feature.managment.table.RoleType
 import org.koin.ktor.ext.inject
-import java.util.*
 
 @Location("${Costant.Url.BASE_API_URL}/managment/bot")
 class BotManagmentRoute {
