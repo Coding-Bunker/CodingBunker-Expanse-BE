@@ -12,11 +12,11 @@ plugins {
     application
     java
     idea
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.32"
     id("com.github.gmazzo.buildconfig") version "2.0.2"
     id("org.jmailen.kotlinter") version "3.3.0"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
-    kotlin("plugin.serialization") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.32"
+    kotlin("plugin.serialization") version "1.4.32"
 }
 
 // group = "it.codingbunker.tbs"
@@ -48,6 +48,7 @@ repositories {
     maven { url = uri("https://kotlin.bintray.com/ktor") }
     maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
     maven { url = uri("https://kotlin.bintray.com/kotlinx") }
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
 }
 
 buildConfig {
@@ -64,16 +65,20 @@ dependencies {
 
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-html-builder:$ktor_version")
-    implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41")
+    implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.148-kotlin-1.4.30")
     implementation("io.ktor:ktor-server-host-common:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-metrics:$ktor_version")
     implementation("io.ktor:ktor-websockets:$ktor_version")
-//	implementation("io.ktor:ktor-jackson:$ktor_version")
     implementation("io.ktor:ktor-serialization:$ktor_version")
 
     // KTOR Auth
     implementation("io.ktor:ktor-auth:$ktor_version")
+    implementation("io.ktor:ktor-client-core:$ktor_version")
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("io.ktor:ktor-client-serialization:$ktor_version")
+    implementation("io.ktor:ktor-server-sessions:$ktor_version")
+    implementation("io.ktor:ktor-client-logging:$ktor_version")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
