@@ -12,10 +12,10 @@ import it.codingbunker.tbs.common.Costant.Url.BASE_API_URL
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.extension.getPropertyString
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
-import it.codingbunker.tbs.data.table.Bot
 import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
 import it.codingbunker.tbs.feature.discord.route.discordGuildRoutes
+import it.codingbunker.tbs.feature.managment.table.Bot
 import it.codingbunker.tbs.mainModule
 import it.condingbunker.tbs.test.utilstest.*
 import kotlinx.coroutines.runBlocking

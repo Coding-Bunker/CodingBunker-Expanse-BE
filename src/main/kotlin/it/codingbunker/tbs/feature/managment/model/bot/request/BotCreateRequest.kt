@@ -1,4 +1,4 @@
-package it.codingbunker.tbs.feature.managment.model.request
+package it.codingbunker.tbs.feature.managment.model.bot.request
 
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import kotlinx.serialization.Required

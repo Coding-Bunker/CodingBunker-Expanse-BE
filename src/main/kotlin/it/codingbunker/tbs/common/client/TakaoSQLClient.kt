@@ -1,10 +1,7 @@
 package it.codingbunker.tbs.common.client
 
-import it.codingbunker.tbs.data.table.Bots
-import it.codingbunker.tbs.data.table.BotsRoles
 import it.codingbunker.tbs.data.table.DiscordGuilds
-import it.codingbunker.tbs.feature.managment.table.Role
-import it.codingbunker.tbs.feature.managment.table.Roles
+import it.codingbunker.tbs.feature.managment.table.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -27,7 +24,14 @@ class TakaoSQLClient(
 
     override suspend fun checkAndActivateDB() {
         newSuspendedTransaction {
-            SchemaUtils.createMissingTablesAndColumns(DiscordGuilds, Roles, Bots, BotsRoles)
+            SchemaUtils.createMissingTablesAndColumns(
+                DiscordGuilds,
+                Roles,
+                Bots,
+                BotsRoles,
+                Users,
+                UsersRoles
+            )
             commit()
 
             Role.initTableValue()

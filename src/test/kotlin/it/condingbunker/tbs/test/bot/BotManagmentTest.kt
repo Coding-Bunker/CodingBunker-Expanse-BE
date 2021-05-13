@@ -5,12 +5,8 @@ import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import it.codingbunker.tbs.common.Costant
-import it.codingbunker.tbs.data.table.Bot
-import it.codingbunker.tbs.data.table.Bots
-import it.codingbunker.tbs.data.table.BotsRoles
 import it.codingbunker.tbs.feature.managment.route.botManagmentRoutes
-import it.codingbunker.tbs.feature.managment.table.Role
-import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.codingbunker.tbs.feature.managment.table.*
 import it.codingbunker.tbs.mainModule
 import it.condingbunker.tbs.test.utilstest.BaseTest
 import it.condingbunker.tbs.test.utilstest.getBotMock

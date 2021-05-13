@@ -1,4 +1,4 @@
-package it.codingbunker.tbs.feature.managment.model
+package it.codingbunker.tbs.feature.managment.model.bot
 
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName

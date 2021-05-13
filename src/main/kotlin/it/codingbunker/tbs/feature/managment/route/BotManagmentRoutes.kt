@@ -12,8 +12,8 @@ import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
-import it.codingbunker.tbs.feature.managment.model.BotIdKeyDTO
-import it.codingbunker.tbs.feature.managment.model.request.BotCreateRequest
+import it.codingbunker.tbs.feature.managment.model.bot.BotIdKeyDTO
+import it.codingbunker.tbs.feature.managment.model.bot.request.BotCreateRequest
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import org.koin.ktor.ext.inject

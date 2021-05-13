@@ -3,6 +3,8 @@ package it.codingbunker.tbs
 import com.github.kittinunf.result.coroutines.SuspendableResult
 import io.ktor.application.*
 import io.ktor.auth.*
+import io.ktor.client.*
+import io.ktor.client.engine.okhttp.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -10,6 +12,7 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
+import io.ktor.sessions.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.common.Costant
 import it.codingbunker.tbs.common.client.TakaoSQLClient
@@ -17,8 +20,14 @@ import it.codingbunker.tbs.common.di.loadKoinModules
 import it.codingbunker.tbs.common.extension.getPropertyString
 import it.codingbunker.tbs.common.feature.Logging
 import it.codingbunker.tbs.common.feature.RoleBasedAuthorization
+import it.codingbunker.tbs.common.feature.cookieX
+import it.codingbunker.tbs.common.model.UserPermissionPrincipal
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
-import it.codingbunker.tbs.feature.managment.model.BotPrincipal
+import it.codingbunker.tbs.common.model.session.UserSession
+import it.codingbunker.tbs.feature.login.route.Login
+import it.codingbunker.tbs.feature.login.route.provideOAuth2Login
+import it.codingbunker.tbs.feature.login.route.redirectUrl
+import it.codingbunker.tbs.feature.managment.model.bot.BotPrincipal
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
@@ -78,9 +87,9 @@ fun Application.mainModule(testing: Boolean = false) {
         loadKoinModules(environment)
     }
 
-    val client by inject<TakaoSQLClient>()
+    val dbClient by inject<TakaoSQLClient>()
     runBlocking {
-        client.checkAndActivateDB()
+        dbClient.checkAndActivateDB()
     }
 
     install(DataConversion)
@@ -123,14 +132,48 @@ fun Application.mainModule(testing: Boolean = false) {
                     null
                 }
             }
+
+        }
+
+        //https://ktor.io/docs/oauth.html#usage
+        //https://github.com/ktorio/ktor-samples/blob/1.3.0/feature/auth/src/io/ktor/samples/auth/OAuthLoginApplication.kt
+        oauth("discord") {
+            client = HttpClient(OkHttp)
+            providerLookup = {
+                provideOAuth2Login(environment)[application.locations.resolve<Login>(Login::class, this).type]
+            }
+            urlProvider = {
+                redirectUrl(Login(it.name), false)
+            }
+        }
+
+        session<UserSession>("LOGIN_SESSION_USER") {
+            validate { session: UserSession ->
+                session
+            }
+
+            challenge {
+                call.respondRedirect(application.locations.href(Login()))
+            }
+        }
+    }
+
+    install(Sessions) {
+        cookieX(
+            name = "LOGIN_SESSION_USER",
+            serializer = UserSession.serializer(),
+            Json,
+            storage = SessionStorageMemory()
+        ) {
+            path = "/"
+            extensions["SameSite"] = "lax"
         }
     }
 
     install(RoleBasedAuthorization) {
-
         getRoles {
             when (it) {
-                is BotPrincipal -> {
+                is UserPermissionPrincipal -> {
                     it.roles
                 }
 

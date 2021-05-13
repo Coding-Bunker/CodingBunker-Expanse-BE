@@ -1,4 +1,4 @@
-package it.codingbunker.tbs.feature.managment.model
+package it.codingbunker.tbs.feature.managment.model.bot
 
 import it.codingbunker.tbs.common.model.UserIdPrincipal
 import it.codingbunker.tbs.common.model.UserPermissionPrincipal
