@@ -9,7 +9,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
-import it.codingbunker.tbs.common.Costant
+import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
@@ -22,7 +22,7 @@ import org.koin.ktor.ext.inject
 import java.time.Duration
 import java.time.ZonedDateTime
 
-@Location("${Costant.Url.BASE_API_URL}/login/{type?}")
+@Location("${Constants.Url.BASE_API_URL}/login/{type?}")
 class Login(val type: String = ""/*, val error: String? = null*/)
 
 
@@ -35,7 +35,7 @@ fun Application.loginRoutes() {
             application.log.info(it.buildText())
         }
 
-        get("${Costant.Url.BASE_API_URL}/login") {
+        get("${Constants.Url.BASE_API_URL}/login") {
             call.loginPage(environment)
         }
 
@@ -97,7 +97,7 @@ fun Application.loginRoutes() {
 
         authenticate("LOGIN_SESSION_USER") {
             withAnyRole(RoleType.ADMIN) {
-                get("${Costant.Url.BASE_API_URL}/home") {
+                get("${Constants.Url.BASE_API_URL}/home") {
                     val abc = call.sessions.get<UserSession>()
 
                     log.debug(abc?.accessToken)

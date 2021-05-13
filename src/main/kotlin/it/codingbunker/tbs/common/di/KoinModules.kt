@@ -1,12 +1,12 @@
 package it.codingbunker.tbs.common.di
 
 import io.ktor.application.*
-import it.codingbunker.tbs.common.Costant.Authentication.ADMIN_USER_ID
-import it.codingbunker.tbs.common.Costant.Database.ADDRESS_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.DRIVER_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.PASSWORD_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.USERNAME_DB_KEY
-import it.codingbunker.tbs.common.Costant.Secret.AAD_CRYPT_SECRET_KEY
+import it.codingbunker.tbs.common.Constants.Database.ADDRESS_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.DRIVER_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.PASSWORD_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.USERNAME_DB_KEY
+import it.codingbunker.tbs.common.Constants.Security.AAD_CRYPT_SECRET_KEY
+import it.codingbunker.tbs.common.Constants.Security.Authentication.Discord.ADMIN_USER_ID
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.getProperty
@@ -36,7 +36,7 @@ fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment): KoinAp
         factory<BotRepository> { BotRepositoryImpl() }
         factory<UserRepository> {
             UserRepositoryImpl(
-                environment.getPropertyList(ADMIN_USER_ID)
+                environment.getPropertyList(ADMIN_USER_ID).orEmpty()
             )
         }
     }

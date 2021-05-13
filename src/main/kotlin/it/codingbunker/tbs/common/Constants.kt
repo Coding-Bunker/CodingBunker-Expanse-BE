@@ -3,7 +3,7 @@ package it.codingbunker.tbs.common
 import io.ktor.application.*
 import it.codingbunker.tbs.common.extension.getPropertyString
 
-object Costant {
+object Constants {
 
     private const val BASE_KEY = "ktor"
 
@@ -15,7 +15,7 @@ object Costant {
         private const val BASE_KEY = "database"
 
         private val BASE_DATABASE_KEY = arrayOf(
-            Costant.BASE_KEY,
+            Constants.BASE_KEY,
             BASE_KEY
         ).compileKey()
 
@@ -25,11 +25,11 @@ object Costant {
         val DRIVER_DB_KEY = "$BASE_DATABASE_KEY.driver"
     }
 
-    object Secret {
-        private const val BASE_KEY = "secret"
+    object Security {
+        private const val BASE_KEY = "security"
 
         private val BASE_SECRET_KEY = arrayOf(
-            Costant.BASE_KEY,
+            Constants.BASE_KEY,
             BASE_KEY
         ).compileKey()
 
@@ -49,10 +49,11 @@ object Costant {
                 private val BASE_DISCORD_KEY = arrayOf(
                     BASE_AUTHENTICATION_KEY,
                     BASE_KEY
-                )
+                ).compileKey()
 
                 val CLIENT_ID_KEY = "$BASE_DISCORD_KEY.clientId"
                 val CLIENT_SECRET_KEY = "$BASE_DISCORD_KEY.clientSecret"
+                val ADMIN_USER_ID = "$BASE_DISCORD_KEY.adminUserId"
 
             }
         }
@@ -62,12 +63,11 @@ object Costant {
         private const val BASE_KEY = "authentication"
 
         private val BASE_AUTHENTICATION_KEY = arrayOf(
-            Costant.BASE_KEY,
+            Constants.BASE_KEY,
             BASE_KEY
         ).compileKey()
 
         val REALM = "$BASE_AUTHENTICATION_KEY.realm"
-        val ADMIN_USER_ID = "$BASE_AUTHENTICATION_KEY.adminUserId"
 
         object Discord {
             private const val BASE_KEY = "discord"
@@ -75,10 +75,10 @@ object Costant {
             private val BASE_DISCORD_KEY = arrayOf(
                 BASE_AUTHENTICATION_KEY,
                 BASE_KEY
-            )
+            ).compileKey()
 
             val ACCESS_TOKEN_URL_KEY = "$BASE_DISCORD_KEY.accessTokenUrl"
-            val AUTHORIZE_URL_KEY = "$BASE_DISCORD_KEY.accessTokenUrl"
+            val AUTHORIZE_URL_KEY = "$BASE_DISCORD_KEY.authorizeUrl"
             val NAME = "$BASE_DISCORD_KEY.name"
 
         }

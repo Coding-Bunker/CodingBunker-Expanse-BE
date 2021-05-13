@@ -2,7 +2,7 @@ package it.condingbunker.tbs.test.utilstest
 
 import io.ktor.application.*
 import io.ktor.config.*
-import it.codingbunker.tbs.common.Costant
+import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.extension.getPropertyString
 import kotlinx.coroutines.runBlocking
@@ -22,10 +22,10 @@ abstract class BaseTest {
 
         if (::takaoSQLClient.isInitialized.not()) {
             takaoSQLClient = TakaoSQLClient(
-                serverAddress = config.getPropertyString(Costant.Database.ADDRESS_DB_KEY),
-                usernameDB = config.getPropertyString(Costant.Database.USERNAME_DB_KEY),
-                passwordDB = config.getPropertyString(Costant.Database.PASSWORD_DB_KEY),
-                driverDB = config.getPropertyString(Costant.Database.DRIVER_DB_KEY)
+                serverAddress = config.getPropertyString(Constants.Database.ADDRESS_DB_KEY),
+                usernameDB = config.getPropertyString(Constants.Database.USERNAME_DB_KEY),
+                passwordDB = config.getPropertyString(Constants.Database.PASSWORD_DB_KEY),
+                driverDB = config.getPropertyString(Constants.Database.DRIVER_DB_KEY)
             )
         }
 

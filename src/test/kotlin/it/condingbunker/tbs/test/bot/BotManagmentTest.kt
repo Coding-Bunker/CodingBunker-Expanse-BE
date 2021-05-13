@@ -4,7 +4,7 @@ import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import it.codingbunker.tbs.common.Costant
+import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.feature.managment.route.botManagmentRoutes
 import it.codingbunker.tbs.feature.managment.table.*
 import it.codingbunker.tbs.mainModule
@@ -77,7 +77,7 @@ class BotManagmentTest : BaseTest() {
                     )
                 ).toJson()
 
-                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", bot) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -100,7 +100,7 @@ class BotManagmentTest : BaseTest() {
                     )
                 ).toJson()
 
-                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", bot) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -120,7 +120,7 @@ class BotManagmentTest : BaseTest() {
                     "botName" to "Ciao", "roleList" to listOf<String>()
                 ).toJson()
 
-                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", bot) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -140,7 +140,7 @@ class BotManagmentTest : BaseTest() {
                     "botName" to "Ciao", "roleList" to null
                 ).toJson()
 
-                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", bot) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -160,7 +160,7 @@ class BotManagmentTest : BaseTest() {
                     "botName" to "", "roleList" to listOf("ABC")
                 ).toJson()
 
-                handleRequest(HttpMethod.Put, "${Costant.Url.BASE_API_URL}/managment/bot/edit", bot) {
+                handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", bot) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     setBody(request)
                 }.apply {
@@ -180,7 +180,7 @@ class BotManagmentTest : BaseTest() {
                 val bot = getBotMock()
                 val botAdmin = getMockBotAdmin()
 
-                handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/${bot.id}", botAdmin) {
+                handleRequest(HttpMethod.Delete, "${Constants.Url.BASE_API_URL}/managment/bot/${bot.id}", botAdmin) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 }.apply {
                     assertEquals(HttpStatusCode.OK, response.status())
@@ -209,7 +209,7 @@ class BotManagmentTest : BaseTest() {
             }) {
                 val botAdmin = getMockBotAdmin()
 
-                handleRequest(HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/", botAdmin) {
+                handleRequest(HttpMethod.Delete, "${Constants.Url.BASE_API_URL}/managment/bot/", botAdmin) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 }.apply {
                     assertEquals(HttpStatusCode.BadRequest, response.status())
@@ -225,7 +225,7 @@ class BotManagmentTest : BaseTest() {
                 val botAdmin = getMockBotAdmin()
 
                 handleRequest(
-                    HttpMethod.Delete, "${Costant.Url.BASE_API_URL}/managment/bot/${UUID.randomUUID()}", botAdmin
+                    HttpMethod.Delete, "${Constants.Url.BASE_API_URL}/managment/bot/${UUID.randomUUID()}", botAdmin
                 ) {
                     addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                 }.apply {

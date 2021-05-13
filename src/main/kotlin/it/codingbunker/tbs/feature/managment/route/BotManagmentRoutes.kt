@@ -7,7 +7,7 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import it.codingbunker.tbs.common.Costant
+import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
@@ -18,7 +18,7 @@ import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import org.koin.ktor.ext.inject
 
-@Location("${Costant.Url.BASE_API_URL}/managment/bot")
+@Location("${Constants.Url.BASE_API_URL}/managment/bot")
 class BotManagmentRoute {
 
     @Location("/edit")

@@ -4,11 +4,11 @@ import io.ktor.application.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import it.codingbunker.tbs.common.Costant.Database.ADDRESS_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.DRIVER_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.PASSWORD_DB_KEY
-import it.codingbunker.tbs.common.Costant.Database.USERNAME_DB_KEY
-import it.codingbunker.tbs.common.Costant.Url.BASE_API_URL
+import it.codingbunker.tbs.common.Constants.Database.ADDRESS_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.DRIVER_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.PASSWORD_DB_KEY
+import it.codingbunker.tbs.common.Constants.Database.USERNAME_DB_KEY
+import it.codingbunker.tbs.common.Constants.Url.BASE_API_URL
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.extension.getPropertyString
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
