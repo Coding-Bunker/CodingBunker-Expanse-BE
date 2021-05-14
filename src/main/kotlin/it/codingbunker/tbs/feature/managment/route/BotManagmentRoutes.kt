@@ -8,6 +8,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import it.codingbunker.tbs.common.Constants
+import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
@@ -15,6 +16,7 @@ import it.codingbunker.tbs.common.model.response.ExceptionResponse
 import it.codingbunker.tbs.feature.managment.model.bot.BotIdKeyDTO
 import it.codingbunker.tbs.feature.managment.model.bot.request.BotCreateRequest
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
+import it.codingbunker.tbs.feature.managment.route.html.getAllBotHtmlPage
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import org.koin.ktor.ext.inject
 
@@ -26,6 +28,9 @@ class BotManagmentRoute {
 
     @Location("/{botId}")
     class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String)
+
+    @Location("/settings")
+    class Settings(val parent: BotManagmentRoute)
 }
 
 fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
@@ -84,5 +89,20 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                 }
             }
         }
+
+        authenticate(LOGIN_SESSION_USER) {
+            withAnyRole(RoleType.ADMIN) {
+                get<BotManagmentRoute.Settings> {
+                    botRepository.getAllBots()
+                        .onSuccess {
+                            call.getAllBotHtmlPage(it)
+                        }.onFailure {
+                            call.respond(HttpStatusCode.InternalServerError)
+                        }
+                }
+            }
+        }
+
+
     }
 }

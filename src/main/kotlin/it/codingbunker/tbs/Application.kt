@@ -15,6 +15,7 @@ import io.ktor.server.engine.*
 import io.ktor.sessions.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.common.Constants
+import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.di.loadKoinModules
 import it.codingbunker.tbs.common.extension.getPropertyString
@@ -147,7 +148,7 @@ fun Application.mainModule(testing: Boolean = false) {
             }
         }
 
-        session<UserSession>("LOGIN_SESSION_USER") {
+        session<UserSession>(LOGIN_SESSION_USER) {
             validate { session: UserSession ->
                 session
             }
@@ -160,7 +161,7 @@ fun Application.mainModule(testing: Boolean = false) {
 
     install(Sessions) {
         cookieX(
-            name = "LOGIN_SESSION_USER",
+            name = LOGIN_SESSION_USER,
             serializer = UserSession.serializer(),
             Json,
             storage = SessionStorageMemory()

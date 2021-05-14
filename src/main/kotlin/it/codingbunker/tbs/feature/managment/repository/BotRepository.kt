@@ -20,6 +20,7 @@ interface BotRepository {
     suspend fun findBotById(botId: String): SuspendableResult<BotDTO, Exception>
 
     suspend fun deleteBotById(botId: String): SuspendableResult<Boolean, Exception>
+    suspend fun getAllBots(): SuspendableResult<List<BotDTO>, Exception>
 }
 
 class BotRepositoryImpl : BaseRepository(), BotRepository {
@@ -69,17 +70,15 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
             if (result.empty()) {
                 throw NoSuchElementException("Bot not found")
             } else {
-                result.first().run {
-                    BotDTO(
-                        id = this.id.value.toString(),
-                        botKey = botKey,
-                        botName = botName,
-                        botDateCreation = botDateCreation,
-                        botRoles = botRoles.map {
-                            it.id.value
-                        }.toSet()
-                    )
-                }
+                result.first().convertToDTO()
+            }
+        }
+    }
+
+    override suspend fun getAllBots(): SuspendableResult<List<BotDTO>, Exception> = newSuspendedTransaction {
+        SuspendableResult.of {
+            Bot.all().map {
+                it.convertToDTO()
             }
         }
     }
@@ -93,5 +92,17 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
         }.onFailure {
             rollback()
         }
+    }
+
+    private fun Bot.convertToDTO(): BotDTO {
+        return BotDTO(
+            id = id.value.toString(),
+            botKey = botKey,
+            botName = botName,
+            botDateCreation = botDateCreation,
+            botRoles = botRoles.map {
+                it.id.value
+            }.toSet()
+        )
     }
 }

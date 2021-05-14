@@ -10,6 +10,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import it.codingbunker.tbs.common.Constants
+import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
@@ -95,7 +96,7 @@ fun Application.loginRoutes() {
             }
         }
 
-        authenticate("LOGIN_SESSION_USER") {
+        authenticate(LOGIN_SESSION_USER) {
             withAnyRole(RoleType.ADMIN) {
                 get("${Constants.Url.BASE_API_URL}/home") {
                     val abc = call.sessions.get<UserSession>()
