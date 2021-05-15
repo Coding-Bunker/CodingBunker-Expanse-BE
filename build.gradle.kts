@@ -5,6 +5,8 @@ val kotlin_version: String by project
 val logback_version: String by project
 val koin_version: String by project
 val exposed_version: String by project
+val kotlinx_datetime: String by project
+val kotlin_css: String by project
 
 val compileKotlin: KotlinCompile by tasks
 
@@ -12,14 +14,12 @@ plugins {
     application
     java
     idea
-    kotlin("jvm") version "1.4.32"
-    id("com.github.gmazzo.buildconfig") version "2.0.2"
+    kotlin("jvm")
     id("org.jmailen.kotlinter") version "3.3.0"
-    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.32"
-    kotlin("plugin.serialization") version "1.4.32"
+    id("org.jetbrains.kotlin.plugin.noarg")
+    kotlin("plugin.serialization")
 }
 
-// group = "it.codingbunker.tbs"
 version = "0.0.1-alpha"
 
 application {
@@ -33,11 +33,9 @@ buildscript {
     }
 
     val kotlin_version: String by project
-    val koin_version: String by project
 
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlin_version")
-        classpath("org.koin:koin-gradle-plugin:$koin_version")
     }
 }
 
@@ -51,13 +49,9 @@ repositories {
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
 }
 
-buildConfig {
-    useKotlinOutput()
-}
-
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime")
 
     implementation("io.ktor:ktor-server-tomcat:$ktor_version")
 
@@ -65,7 +59,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-html-builder:$ktor_version")
-    implementation("org.jetbrains:kotlin-css-jvm:1.0.0-pre.148-kotlin-1.4.30")
+    implementation("org.jetbrains:kotlin-css-jvm:$kotlin_css")
     implementation("io.ktor:ktor-server-host-common:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-metrics:$ktor_version")
@@ -84,9 +78,9 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
 
-    implementation("org.koin:koin-ktor:$koin_version")
-    implementation("org.koin:koin-logger-slf4j:$koin_version")
-    testImplementation("org.koin:koin-test:$koin_version")
+    implementation("io.insert-koin:koin-ktor:$koin_version")
+    implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    testImplementation("io.insert-koin:koin-test:$koin_version")
 
     // Result
     implementation("com.github.kittinunf.result:result:3.1.0")
@@ -99,7 +93,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
     implementation("org.postgresql:postgresql:42.2.18")
 
-    testImplementation("com.h2database:h2:1.4.199")
+    implementation("com.h2database:h2:1.4.199")
 
     implementation("org.apache.commons:commons-text:1.8")
 
