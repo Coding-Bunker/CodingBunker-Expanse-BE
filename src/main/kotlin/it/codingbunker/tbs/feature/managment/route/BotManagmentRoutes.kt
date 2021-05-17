@@ -16,7 +16,11 @@ import it.codingbunker.tbs.common.model.response.ExceptionResponse
 import it.codingbunker.tbs.feature.managment.model.bot.BotIdKeyDTO
 import it.codingbunker.tbs.feature.managment.model.bot.request.BotCreateRequest
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
+import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_NAME_ID
+import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_PERMISSION_ID
 import it.codingbunker.tbs.feature.managment.route.html.getAllBotHtmlPage
+import it.codingbunker.tbs.feature.managment.route.html.getConfigureNewBotHtmlPage
+import it.codingbunker.tbs.feature.managment.route.html.showBotConfigurationResultHtmlPage
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import org.koin.ktor.ext.inject
 
@@ -30,7 +34,11 @@ class BotManagmentRoute {
     class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String)
 
     @Location("/settings")
-    class Settings(val parent: BotManagmentRoute)
+    class Settings(val parent: BotManagmentRoute) {
+
+        @Location("/create")
+        class Create(val parent: Settings)
+    }
 }
 
 fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
@@ -44,7 +52,7 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
             }
         }
 
-        authenticate {
+        authenticate(LOGIN_SESSION_USER) {
             withAnyRole(RoleType.ADMIN) {
                 put<BotManagmentRoute.Edit> {
                     val discordGuild = call.receive<BotCreateRequest>()
@@ -87,11 +95,7 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                         call.respond(HttpStatusCode.NotFound)
                     }
                 }
-            }
-        }
 
-        authenticate(LOGIN_SESSION_USER) {
-            withAnyRole(RoleType.ADMIN) {
                 get<BotManagmentRoute.Settings> {
                     botRepository.getAllBots()
                         .onSuccess {
@@ -100,9 +104,35 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                             call.respond(HttpStatusCode.InternalServerError)
                         }
                 }
+
+                get<BotManagmentRoute.Settings.Create> {
+                    call.getConfigureNewBotHtmlPage()
+                }
+
+                post<BotManagmentRoute.Settings.Create> {
+                    val formParameters = call.receiveParameters()
+                    val botName: String? = formParameters[FORM_BOT_NAME_ID]
+                    val permissionRequestedList: Set<RoleType>? = formParameters[FORM_BOT_PERMISSION_ID]?.toInt()?.let {
+                        setOf(RoleType.values()[it])
+                    }
+
+                    if (botName.isNullOrBlank()) {
+                        call.getConfigureNewBotHtmlPage()
+                        return@post
+                    }
+
+                    if (permissionRequestedList.isNullOrEmpty()) {
+                        call.getConfigureNewBotHtmlPage()
+                        return@post
+                    }
+
+                    val result = botRepository.generateBot(
+                        botName, permissionRequestedList
+                    )
+
+                    call.showBotConfigurationResultHtmlPage(result)
+                }
             }
         }
-
-
     }
 }

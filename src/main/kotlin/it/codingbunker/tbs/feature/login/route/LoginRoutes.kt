@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.feature.login.route
 
-import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.coroutines.getOrNull
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.html.*
@@ -14,6 +14,7 @@ import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
+import it.codingbunker.tbs.common.html.page.bulmaHead
 import it.codingbunker.tbs.common.model.session.UserSession
 import it.codingbunker.tbs.feature.managment.repository.UserRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
@@ -25,7 +26,6 @@ import java.time.ZonedDateTime
 
 @Location("${Constants.Url.BASE_API_URL}/login/{type?}")
 class Login(val type: String = ""/*, val error: String? = null*/)
-
 
 fun Application.loginRoutes() {
     routing {
@@ -39,7 +39,6 @@ fun Application.loginRoutes() {
         get("${Constants.Url.BASE_API_URL}/login") {
             call.loginPage(environment)
         }
-
 
         location<Login>() {
 
@@ -57,13 +56,9 @@ fun Application.loginRoutes() {
 
                         discordClient.getUser(principal).onSuccess { discordUser ->
                             val userExist = userRepository.existUserByDiscordId(discordUser.id)
-                            val userDTO = if (userExist) {
-                                val result = userRepository.findUserByDiscordId(discordUser.id)
-                                if (result is Result.Success<*>) {
-                                    result.value as UserDTO
-                                } else {
-                                    null
-                                }
+
+                            val userDTO: UserDTO? = if (userExist) {
+                                userRepository.findUserByDiscordId(discordUser.id).getOrNull()
                             } else {
                                 userRepository.generateUserByDiscordUser(discordUser)
                             }
@@ -72,7 +67,6 @@ fun Application.loginRoutes() {
                                 call.loginFailedPage(listOf("User not found"))
                                 return@onSuccess
                             }
-
 
                             val userSession = UserSession(
                                 principal.accessToken,
@@ -114,7 +108,7 @@ fun Application.loginRoutes() {
 
 private suspend fun ApplicationCall.loginPage(environment: ApplicationEnvironment) {
     respondHtml {
-        head {
+        bulmaHead {
             title { +"Login with" }
         }
         body {

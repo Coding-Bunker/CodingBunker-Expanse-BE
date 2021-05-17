@@ -24,16 +24,15 @@ class OAuth2DiscordClient {
             host + BASE_API_URL
         }
         install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                prettyPrint = true
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+            serializer = KotlinxSerializer(
+                kotlinx.serialization.json.Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                }
+            )
         }
-
-
     }
-
 
     suspend fun getUser(token: OAuthAccessTokenResponse.OAuth2): SuspendableResult<DiscordOAuth2User, Exception> {
         return SuspendableResult.of {
@@ -44,5 +43,4 @@ class OAuth2DiscordClient {
             }
         }
     }
-
 }

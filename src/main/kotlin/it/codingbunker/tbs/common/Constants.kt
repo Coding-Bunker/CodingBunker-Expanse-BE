@@ -58,7 +58,6 @@ object Constants {
                 val CLIENT_ID_KEY = "$BASE_DISCORD_KEY.clientId"
                 val CLIENT_SECRET_KEY = "$BASE_DISCORD_KEY.clientSecret"
                 val ADMIN_USER_ID = "$BASE_DISCORD_KEY.adminUserId"
-
             }
         }
     }
@@ -84,7 +83,6 @@ object Constants {
             val ACCESS_TOKEN_URL_KEY = "$BASE_DISCORD_KEY.accessTokenUrl"
             val AUTHORIZE_URL_KEY = "$BASE_DISCORD_KEY.authorizeUrl"
             val NAME = "$BASE_DISCORD_KEY.name"
-
         }
     }
 

@@ -40,15 +40,16 @@ fun createRealTestEnvironment(
 
 fun loadConfig(confName: String = CONFIG_NAME) = HoconApplicationConfig(ConfigFactory.load(confName))
 
-
 fun Map<*, *>.toJson() = toJsonObject().toString()
 
-//@ImplicitReflectionSerializer
-fun Map<*, *>.toJsonObject(): JsonObject = JsonObject(map {
-    it.key.toString() to it.value.toJsonElement()
-}.toMap())
+// @ImplicitReflectionSerializer
+fun Map<*, *>.toJsonObject(): JsonObject = JsonObject(
+    map {
+        it.key.toString() to it.value.toJsonElement()
+    }.toMap()
+)
 
-//@ImplicitReflectionSerializer
+// @ImplicitReflectionSerializer
 fun Any?.toJsonElement(): JsonElement = when (this) {
     null -> JsonNull
     is Number -> JsonPrimitive(this)
