@@ -38,6 +38,8 @@ import org.koin.ktor.ext.inject
 import org.koin.logger.slf4jLogger
 import org.slf4j.event.Level
 import java.time.Duration
+import kotlin.collections.set
+import kotlin.collections.setOf
 
 fun main(args: Array<String>) {
     io.ktor.server.tomcat.EngineMain.main(args)
@@ -85,6 +87,8 @@ fun Application.mainModule(testing: Boolean = false) {
 
     install(Koin) {
         slf4jLogger()
+        // https://github.com/InsertKoinIO/koin/issues/1076 TODO
+        koin.logger.level = org.koin.core.logger.Level.NONE
         loadKoinModules(environment)
     }
 
@@ -133,11 +137,10 @@ fun Application.mainModule(testing: Boolean = false) {
                     null
                 }
             }
-
         }
 
-        //https://ktor.io/docs/oauth.html#usage
-        //https://github.com/ktorio/ktor-samples/blob/1.3.0/feature/auth/src/io/ktor/samples/auth/OAuthLoginApplication.kt
+        // https://ktor.io/docs/oauth.html#usage
+        // https://github.com/ktorio/ktor-samples/blob/1.3.0/feature/auth/src/io/ktor/samples/auth/OAuthLoginApplication.kt
         oauth("discord") {
             client = HttpClient(OkHttp)
             providerLookup = {
@@ -184,9 +187,11 @@ fun Application.mainModule(testing: Boolean = false) {
     }
 
     install(ContentNegotiation) {
-        json(Json {
-            prettyPrint = true
-        })
+        json(
+            Json {
+                prettyPrint = true
+            }
+        )
     }
 
     /*
