@@ -1,6 +1,7 @@
 package it.codingbunker.tbs.common.di
 
 import io.ktor.application.*
+import io.ktor.client.*
 import it.codingbunker.tbs.common.Constants.Database.ADDRESS_DB_KEY
 import it.codingbunker.tbs.common.Constants.Database.DRIVER_DB_KEY
 import it.codingbunker.tbs.common.Constants.Database.PASSWORD_DB_KEY
@@ -20,9 +21,19 @@ import it.codingbunker.tbs.feature.managment.repository.UserRepositoryImpl
 import it.codingbunker.tbs.utils.CryptoClientInterface
 import it.codingbunker.tbs.utils.CryptoClientInterfaceImpl
 import org.koin.core.KoinApplication
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment): KoinApplication {
+object KoinModules {
+    fun getExternalHttpClientModule() = module {
+        factory {
+            HttpClient()
+        }
+    }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment, moduleList: List<Module>): KoinApplication {
     val dataModule = module {
         single {
             TakaoSQLClient(
@@ -48,10 +59,16 @@ fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment): KoinAp
             )
         }
 
-        single {
-            OAuth2DiscordClient()
+        factory {
+            OAuth2DiscordClient(get())
         }
     }
 
-    return modules(listOf(dataModule, utilModule))
+    return modules(
+        buildList {
+            add(dataModule)
+            add(utilModule)
+            addAll(moduleList)
+        }
+    )
 }
