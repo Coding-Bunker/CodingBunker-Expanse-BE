@@ -7,6 +7,7 @@ val koin_version: String by project
 val exposed_version: String by project
 val kotlinx_datetime: String by project
 val kotlin_css: String by project
+val mockk_version: String by project
 
 val compileKotlin: KotlinCompile by tasks
 
@@ -69,7 +70,6 @@ dependencies {
     // KTOR Auth
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
     implementation("io.ktor:ktor-client-serialization:$ktor_version")
     implementation("io.ktor:ktor-server-sessions:$ktor_version")
     implementation("io.ktor:ktor-client-logging:$ktor_version")
@@ -80,6 +80,7 @@ dependencies {
 
     implementation("io.insert-koin:koin-ktor:$koin_version")
     implementation("io.insert-koin:koin-logger-slf4j:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit5:$koin_version")
     testImplementation("io.insert-koin:koin-test:$koin_version")
 
     // Result
@@ -100,6 +101,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
+    testImplementation("io.mockk:mockk:$mockk_version")
+    implementation("io.insert-koin:koin-core-ext:$koin_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
 
     // crypt
     implementation("com.google.crypto.tink:tink:1.5.0")
