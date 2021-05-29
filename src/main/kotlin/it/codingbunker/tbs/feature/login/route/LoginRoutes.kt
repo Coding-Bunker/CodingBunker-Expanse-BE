@@ -9,9 +9,11 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
+import io.ktor.util.*
 import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
+import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.html.page.bulmaHead
@@ -82,6 +84,11 @@ fun Application.loginRoutes() {
                             call.sessions.set(userSession)
 
                             call.loggedInSuccessResponse(principal)
+                        }.onFailure {
+                            application.log.error(it)
+                            call.loginFailedPage(it.stackTrace.map {
+                                it.toString()
+                            })
                         }
                     } else {
                         call.loginPage(environment)

@@ -25,7 +25,7 @@ object Constants {
 
         val ADDRESS_DB_KEY = "$BASE_DATABASE_KEY.address"
         val USERNAME_DB_KEY = "$BASE_DATABASE_KEY.username"
-        val PASSWORD_DB_KEY = "$BASE_DATABASE_KEY.password "
+        val PASSWORD_DB_KEY = "$BASE_DATABASE_KEY.password"
         val DRIVER_DB_KEY = "$BASE_DATABASE_KEY.driver"
     }
 
