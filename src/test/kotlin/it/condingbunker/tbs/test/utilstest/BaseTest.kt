@@ -8,9 +8,10 @@ import it.codingbunker.tbs.common.extension.getPropertyString
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.test.KoinTest
 import kotlin.test.BeforeTest
 
-abstract class BaseTest {
+abstract class BaseTest : KoinTest {
     private lateinit var takaoSQLClient: TakaoSQLClient
     private lateinit var config: HoconApplicationConfig
 
