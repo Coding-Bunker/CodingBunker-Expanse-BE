@@ -4,6 +4,8 @@ import com.github.kittinunf.result.coroutines.SuspendableResult
 import io.ktor.auth.*
 import io.ktor.client.*
 import io.ktor.client.features.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -31,34 +33,29 @@ class OAuth2DiscordClient(private val client: HttpClient) {
                 host + BASE_API_URL
                 accept(ContentType.Application.Json)
             }
-//            install(JsonFeature) {
-//                serializer = KotlinxSerializer(
-//                    kotlinx.serialization.json.Json {
-//                        prettyPrint = true
-//                        isLenient = true
-//                        ignoreUnknownKeys = true
-//                    }
-//                )
-//            }
+            install(JsonFeature) {
+                serializer = KotlinxSerializer(jsonSerializerDeserializer)
+            }
         }
     }
 
     suspend fun getUser(token: OAuthAccessTokenResponse.OAuth2): SuspendableResult<DiscordOAuth2User, Exception> {
         return SuspendableResult.of {
-            client.get<String>("$BASE_API_URL/users/@me") {
-                headers {
-                    append(HttpHeaders.Authorization, "${token.tokenType} ${token.accessToken}")
+            try {
+                return@of client.get<DiscordOAuth2User>("$BASE_API_URL/users/@me") {
+                    headers {
+                        append(HttpHeaders.Authorization, "${token.tokenType} ${token.accessToken}")
+                    }
                 }
-            }.run {
-                jsonSerializerDeserializer.decodeFromString(this)
+            } catch (ex: Exception) {
+                return@of client.get<String>("$BASE_API_URL/users/@me") {
+                    headers {
+                        append(HttpHeaders.Authorization, "${token.tokenType} ${token.accessToken}")
+                    }
+                }.run {
+                    jsonSerializerDeserializer.decodeFromString(this)
+                }
             }
-
-
-//            client.get("$BASE_API_URL/users/@me") {
-//                headers {
-//                    append(HttpHeaders.Authorization, "${token.tokenType} ${token.accessToken}")
-//                }
-//            }
         }
     }
 }
