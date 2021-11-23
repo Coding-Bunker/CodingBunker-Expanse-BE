@@ -4,9 +4,12 @@ import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.locations.*
+import io.ktor.locations.post
+import io.ktor.locations.put
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.util.pipeline.*
 import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.extension.onFailure
@@ -22,6 +25,7 @@ import it.codingbunker.tbs.feature.managment.route.html.getAllBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.getConfigureNewBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.showBotConfigurationResultHtmlPage
 import it.codingbunker.tbs.feature.managment.table.RoleType
+import kotlinx.coroutines.coroutineScope
 import org.koin.ktor.ext.inject
 
 @Location("${Constants.Url.BASE_API_URL}/managment/bot")
@@ -31,7 +35,11 @@ class BotManagmentRoute {
     class Edit(val parent: BotManagmentRoute)
 
     @Location("/{botId}")
-    class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String)
+    class BotManagmentRouteId(val parent: BotManagmentRoute, val botId: String) {
+
+        @Location("/delete")
+        class Delete(val parent: BotManagmentRoute)
+    }
 
     @Location("/settings")
     class Settings(val parent: BotManagmentRoute) {
@@ -44,6 +52,7 @@ class BotManagmentRoute {
 fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
 
     val botRepository by inject<BotRepository>()
+    val botManagmentController by inject<BotManagmentController>()
 
     routing {
         if (testOrDebug) {
@@ -75,26 +84,12 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                 }
 
                 delete<BotManagmentRoute.BotManagmentRouteId> {
-                    if (it.botId.isBlank()) {
-                        call.respond(HttpStatusCode.BadRequest)
-                        return@delete
-                    }
-
-                    val exist = botRepository.existBotById(it.botId)
-
-                    if (exist) {
-                        botRepository.deleteBotById(it.botId).onSuccess {
-                            call.respond(HttpStatusCode.OK)
-                        }.onFailure { ex ->
-                            call.respond(
-                                HttpStatusCode.InternalServerError,
-                                ExceptionResponse(ex::class.toString(), ex.stackTraceToString())
-                            )
-                        }
-                    } else {
-                        call.respond(HttpStatusCode.NotFound)
-                    }
+//                    botManagmentController.deleteBot()
                 }
+
+//                get<BotManagmentRoute.BotManagmentRouteId.Delete> {
+//
+//                }
 
                 get<BotManagmentRoute.Settings> {
                     botRepository.getAllBots()
@@ -135,4 +130,27 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
             }
         }
     }
+
+    suspend fun PipelineContext<Unit, ApplicationCall>.deleteBot(botId: String) = coroutineScope {
+        if (botId.isBlank()) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@coroutineScope
+        }
+
+        val exist = botRepository.existBotById(botId)
+
+        if (exist) {
+            botRepository.deleteBotById(botId).onSuccess {
+                call.respond(HttpStatusCode.OK)
+            }.onFailure { ex ->
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    ExceptionResponse(ex::class.toString(), ex.stackTraceToString())
+                )
+            }
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
+    }
+
 }

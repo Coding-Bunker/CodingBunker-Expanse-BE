@@ -18,6 +18,8 @@ import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import it.codingbunker.tbs.feature.managment.repository.BotRepositoryImpl
 import it.codingbunker.tbs.feature.managment.repository.UserRepository
 import it.codingbunker.tbs.feature.managment.repository.UserRepositoryImpl
+import it.codingbunker.tbs.feature.managment.route.BotManagmentController
+import it.codingbunker.tbs.feature.managment.route.BotManagmentControllerImpl
 import it.codingbunker.tbs.utils.CryptoClientInterface
 import it.codingbunker.tbs.utils.CryptoClientInterfaceImpl
 import org.koin.core.KoinApplication
@@ -64,10 +66,15 @@ fun KoinApplication.loadKoinModules(environment: ApplicationEnvironment, moduleL
         }
     }
 
+    val controllerModule = module {
+        factory<BotManagmentController> { BotManagmentControllerImpl(get()) }
+    }
+
     return modules(
         buildList {
             add(dataModule)
             add(utilModule)
+            add(controllerModule)
             addAll(moduleList)
         }
     )

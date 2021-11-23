@@ -23,10 +23,6 @@ plugins {
 
 version = "0.0.1-alpha"
 
-application {
-    mainClassName = "io.ktor.server.tomcat.EngineMain"
-}
-
 buildscript {
 
     repositories {
@@ -41,10 +37,9 @@ buildscript {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
-    jcenter()
-    maven { url = uri("https://kotlin.bintray.com/ktor") }
+//    maven { url = uri("https://kotlin.bintray.com/ktor")
+    maven { url = uri("https://repo1.maven.org/maven2") }
     maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
     maven { url = uri("https://kotlin.bintray.com/kotlinx") }
     maven { url = uri("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven") }
@@ -84,15 +79,15 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:$koin_version")
 
     // Result
-    implementation("com.github.kittinunf.result:result:3.1.0")
-    implementation("com.github.kittinunf.result:result-coroutines:3.1.0")
+    implementation("com.github.kittinunf.result:result:5.2.0")
+    implementation("com.github.kittinunf.result:result-coroutines:4.0.0")
 
     // Exposed
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-dao:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
-    implementation("org.postgresql:postgresql:42.2.18")
+    implementation("org.postgresql:postgresql:42.3.1")
 
     implementation("com.h2database:h2:1.4.199")
 
@@ -102,16 +97,16 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
     testImplementation("io.mockk:mockk:$mockk_version")
-    implementation("io.insert-koin:koin-core-ext:$koin_version")
+    implementation("io.insert-koin:koin-core-ext:3.0.2")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
 
     // crypt
-    implementation("com.google.crypto.tink:tink:1.5.0")
+    implementation("com.google.crypto.tink:tink:1.6.1")
 
     // RSocket
-    implementation("io.rsocket.kotlin:rsocket-core:0.12.0")
-    implementation("io.rsocket.kotlin:rsocket-transport-ktor:0.12.0")
-    implementation("io.rsocket.kotlin:rsocket-transport-ktor-server:0.12.0")
+    implementation("io.rsocket.kotlin:rsocket-core:0.13.1")
+    implementation("io.rsocket.kotlin:rsocket-transport-ktor:0.13.1")
+    implementation("io.rsocket.kotlin:rsocket-transport-ktor-server:0.13.1")
 }
 
 configurations.all {
