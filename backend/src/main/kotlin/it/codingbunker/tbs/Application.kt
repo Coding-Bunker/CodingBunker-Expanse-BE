@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
 import io.ktor.locations.*
 import io.ktor.response.*
+import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.sessions.*
 import io.ktor.websocket.*
@@ -190,13 +191,13 @@ fun Application.mainModule(
         }
     }
 
-//    install(ContentNegotiation) {
-//        json(
-//            Json {
-//                prettyPrint = true
-//            }
-//        )
-//    }
+    install(ContentNegotiation) {
+        json(
+            Json {
+                prettyPrint = true
+            }
+        )
+    }
 
     /*
     runBlocking {

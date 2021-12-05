@@ -4,7 +4,6 @@ import com.github.kittinunf.result.coroutines.getOrNull
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.html.*
-import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -85,16 +84,16 @@ fun Application.loginRoutes() {
 
                             call.sessions.set(userSession)
 
-                            call.respond(HttpStatusCode.Unauthorized)
+//                            call.respond(HttpStatusCode.Unauthorized)
+//
+//                            //TODO REDIRECT TO CORRECT PAGE
+//                            call.respondRedirect(Constants.Security.Web.URL_REDIRECT)
 
-                            //TODO REDIRECT TO CORRECT PAGE
-                            call.respondRedirect(Constants.Security.Web.URL_REDIRECT)
-
-//                            call.loggedInSuccessResponse(principal)
+                            call.loggedInSuccessResponse(principal)
                         }.onFailure {
                             //TODO SWITCH THIS TO FRONTEND
                             application.log.error(it)
-                            call.respondRedirect("${Constants.Security.Web.URL_REDIRECT}/error")
+//                            call.respondRedirect("${Constants.Security.Web.URL_REDIRECT}/error")
 
                             call.loginFailedPage(it.stackTrace.map {
                                 it.toString()
