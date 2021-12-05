@@ -44,18 +44,20 @@ class BotManagmentTest : BaseTest() {
     }
 
     override fun Application.installModuleToTest() {
-        mainModule(true, listOf(
-            module {
-                factory {
-                    HttpClient(MockEngine) {
-                        engine {
-                            addHandler { request ->
-                                val responseHeaders =
-                                    headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
-                                when {
-                                    request.url.encodedPath.contains("/api/oauth2/token", true) -> {
-                                        respond(
-                                            """
+        mainModule(
+            true,
+            listOf(
+                module {
+                    factory {
+                        HttpClient(MockEngine) {
+                            engine {
+                                addHandler { request ->
+                                    val responseHeaders =
+                                        headersOf("Content-Type" to listOf(ContentType.Application.Json.toString()))
+                                    when {
+                                        request.url.encodedPath.contains("/api/oauth2/token", true) -> {
+                                            respond(
+                                                """
                                                 {
                                                   "access_token":"TEST_ACCESS_TOKEN",
                                                   "token_type":"bearer",
@@ -63,12 +65,13 @@ class BotManagmentTest : BaseTest() {
                                                   "refresh_token":"TEST_REFRESH_TOKEN",
                                                   "scope":"create"
                                                 }
-                                            """.trimIndent(), HttpStatusCode.OK, responseHeaders
-                                        )
-                                    }
-                                    request.url.encodedPath.contains("/users/@me", true) -> {
-                                        respond(
-                                            """
+                                                """.trimIndent(),
+                                                HttpStatusCode.OK, responseHeaders
+                                            )
+                                        }
+                                        request.url.encodedPath.contains("/users/@me", true) -> {
+                                            respond(
+                                                """
                                                 {
                                                   "id": "ABC123",
                                                   "username": "samuele794 TBS",
@@ -79,20 +82,21 @@ class BotManagmentTest : BaseTest() {
                                                   "email": "test@test.com",
                                                   "verified": true
                                                 }
-                                            """.trimIndent(), HttpStatusCode.OK, responseHeaders
-                                        )
-                                    }
-                                    else -> {
-                                        error("Unhandled ${request.url.encodedPath}")
+                                                """.trimIndent(),
+                                                HttpStatusCode.OK, responseHeaders
+                                            )
+                                        }
+                                        else -> {
+                                            error("Unhandled ${request.url.encodedPath}")
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-
                 }
-            }
-        ))
+            )
+        )
         botManagmentRoutes(true)
         loginRoutes()
     }
@@ -119,7 +123,6 @@ class BotManagmentTest : BaseTest() {
         }.let { call ->
             responseCookies = call.response.cookies[Constants.Session.LOGIN_SESSION_USER]
         }
-
 
         return responseCookies!!
     }
@@ -236,7 +239,7 @@ class BotManagmentTest : BaseTest() {
 
     @Nested
     inner class BotDeleteTest {
-        //TODO TEST DISABLED, URL NOT WORKING
+        // TODO TEST DISABLED, URL NOT WORKING
 //        @Test
         fun `Delete Bot, Result is OK deleted`() {
             withRealTestApplication({

@@ -47,16 +47,16 @@ class RoleBasedAuthorization(config: Configuration) {
             anyRoleSet?.let {
                 if (anyRoleSet.none { it in roles }) {
                     denyReasons += "Principal $principal has none of the sufficient role(s) ${
-                        anyRoleSet.joinToString(
-                            " or "
-                        )
+                    anyRoleSet.joinToString(
+                        " or "
+                    )
                     }"
                 }
             }
             noneRoleSet?.let {
                 if (noneRoleSet.any { it in roles }) {
                     denyReasons += "Principal $principal has forbidden role(s) ${
-                        (noneRoleSet.intersect(roles)).joinToString(" and ")
+                    (noneRoleSet.intersect(roles)).joinToString(" and ")
                     }"
                 }
             }
