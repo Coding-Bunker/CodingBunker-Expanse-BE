@@ -22,11 +22,13 @@ inline fun HTML.baseHtmlBody(crossinline block: BODY.() -> Unit) {
     }
 }
 
-class IONIC_ICON(consumer: TagConsumer<*>) : HTMLTag(
-    "ion-icon", consumer, emptyMap(),
-    inlineTag = true,
-    emptyTag = true
-), HtmlInlineTag {
+class IONIC_ICON(consumer: TagConsumer<*>) :
+    HTMLTag(
+        "ion-icon", consumer, emptyMap(),
+        inlineTag = true,
+        emptyTag = true
+    ),
+    HtmlInlineTag {
     fun name(iconName: String) {
         attributes["name"] = iconName
     }

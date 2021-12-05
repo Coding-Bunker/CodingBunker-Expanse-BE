@@ -171,7 +171,6 @@ suspend fun ApplicationCall.getConfigureNewBotHtmlPage() {
 suspend fun ApplicationCall.showBotConfigurationResultHtmlPage(botDTO: BotDTO) {
     respondHtml {
         bulmaHead {
-
         }
         body {
             section {
@@ -201,7 +200,6 @@ suspend fun ApplicationCall.showBotConfigurationResultHtmlPage(botDTO: BotDTO) {
                     text("Torna alla lista bot")
                 }
             }
-
         }
     }
 }

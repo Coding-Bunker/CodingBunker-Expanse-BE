@@ -42,7 +42,6 @@ fun Application.loginRoutes() {
             call.loginPage(environment)
         }
 
-
         location<Login>() {
 
 //            optionalParam("error") {
@@ -91,13 +90,15 @@ fun Application.loginRoutes() {
 
                             call.loggedInSuccessResponse(principal)
                         }.onFailure {
-                            //TODO SWITCH THIS TO FRONTEND
+                            // TODO SWITCH THIS TO FRONTEND
                             application.log.error(it)
 //                            call.respondRedirect("${Constants.Security.Web.URL_REDIRECT}/error")
 
-                            call.loginFailedPage(it.stackTrace.map {
-                                it.toString()
-                            })
+                            call.loginFailedPage(
+                                it.stackTrace.map {
+                                    it.toString()
+                                }
+                            )
                         }
                     } else {
                         call.loginPage(environment)

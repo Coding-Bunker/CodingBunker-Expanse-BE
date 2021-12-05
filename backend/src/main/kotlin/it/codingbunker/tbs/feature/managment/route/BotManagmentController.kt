@@ -11,8 +11,5 @@ interface BotManagmentController {
 
 class BotManagmentControllerImpl(private val botRepository: BotRepository) : BotManagmentController {
     override suspend fun PipelineContext<Unit, ApplicationCall>.deleteBot(botId: String) {
-
     }
-
-
 }

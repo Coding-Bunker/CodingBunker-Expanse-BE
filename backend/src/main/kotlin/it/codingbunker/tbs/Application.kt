@@ -47,7 +47,8 @@ fun main(args: Array<String>) {
 @OptIn(ExperimentalStdlibApi::class)
 @JvmOverloads
 fun Application.mainModule(
-    testing: Boolean = false, moduleList: List<Module> = buildList {
+    testing: Boolean = false,
+    moduleList: List<Module> = buildList {
         add(KoinModules.getExternalHttpClientModule())
     }
 ) {
@@ -57,7 +58,6 @@ fun Application.mainModule(
         koin.logger.level = org.koin.core.logger.Level.NONE
         loadKoinModules(environment, moduleList)
     }
-
 
     install(Locations) {}
 

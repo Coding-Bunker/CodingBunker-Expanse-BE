@@ -1,6 +1,5 @@
 package it.codingbunker.tbs.common.client.discord.model
 
-
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

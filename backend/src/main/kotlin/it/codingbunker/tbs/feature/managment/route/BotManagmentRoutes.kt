@@ -159,5 +159,4 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
             call.respond(HttpStatusCode.NotFound)
         }
     }
-
 }

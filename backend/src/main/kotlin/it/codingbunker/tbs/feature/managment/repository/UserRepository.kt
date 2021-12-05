@@ -71,6 +71,4 @@ class UserRepositoryImpl(private val authorizedAdminUserList: List<String>) : Us
             avatarImageData = avatarImageData?.bytes,
             dateCreation = dateCreation
         )
-
-
 }
