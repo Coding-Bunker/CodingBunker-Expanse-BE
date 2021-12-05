@@ -87,13 +87,14 @@ fun Application.loginRoutes() {
 
                             call.respond(HttpStatusCode.Unauthorized)
 
-                            call.respondRedirect("http://192.168.178.21:3000/")
+                            //TODO REDIRECT TO CORRECT PAGE
+                            call.respondRedirect(Constants.Security.Web.URL_REDIRECT)
 
 //                            call.loggedInSuccessResponse(principal)
                         }.onFailure {
                             //TODO SWITCH THIS TO FRONTEND
                             application.log.error(it)
-                            call.respondRedirect("http://192.168.178.21:3000/error")
+                            call.respondRedirect("${Constants.Security.Web.URL_REDIRECT}/error")
 
                             call.loginFailedPage(it.stackTrace.map {
                                 it.toString()

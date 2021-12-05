@@ -60,6 +60,17 @@ object Constants {
                 val ADMIN_USER_ID = "$BASE_DISCORD_KEY.adminUserId"
             }
         }
+
+        object Web {
+            private const val BASE_KEY = "web"
+
+            private val BASE_WEB_KEY = arrayOf(
+                BASE_SECRET_KEY,
+                BASE_KEY
+            ).compileKey()
+
+            val URL_REDIRECT = "$BASE_WEB_KEY.urlRedirect"
+        }
     }
 
     object Authentication {
