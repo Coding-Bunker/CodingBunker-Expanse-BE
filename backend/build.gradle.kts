@@ -20,7 +20,7 @@ repositories {
 plugins {
     kotlin("jvm")
     application
-//    id("org.jmailen.kotlinter") version "3.3.0"
+    id("org.jmailen.kotlinter") version "3.3.0"
     id("org.jetbrains.kotlin.plugin.noarg")
     kotlin("plugin.serialization")
 }
@@ -34,11 +34,11 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-//kotlinter {
-//    disabledRules = arrayOf(
-//        "no-wildcard-imports"
-//    )
-//}
+kotlinter {
+    disabledRules = arrayOf(
+        "no-wildcard-imports"
+    )
+}
 
 dependencies {
     implementation(kotlin("reflect"))
