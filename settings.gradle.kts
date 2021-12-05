@@ -1,11 +1,13 @@
-rootProject.name = "expansebe"
-
 pluginManagement {
-    val kotlin_version: String by settings
-
-    plugins {
-        kotlin("jvm") version kotlin_version
-        id("org.jetbrains.kotlin.plugin.noarg") version kotlin_version
-        kotlin("plugin.serialization") version kotlin_version
+    repositories {
+        maven { setUrl("https://plugins.gradle.org/m2/") }
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
     }
 }
+rootProject.name = "expansebe"
+
+include(":backend")
+include(":web")
