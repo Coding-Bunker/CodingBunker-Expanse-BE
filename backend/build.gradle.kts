@@ -24,12 +24,6 @@ plugins {
     id("org.jetbrains.kotlin.plugin.noarg")
     kotlin("plugin.serialization")
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_12.toString()
-    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
-}
-
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }

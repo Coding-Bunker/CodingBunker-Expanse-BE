@@ -9,8 +9,14 @@ buildscript {
     }
 
     dependencies {
+        classpath("com.android.tools.build:gradle:7.0.4")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
         classpath("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlin_version")
     }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_12.toString()
+    kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
 }
