@@ -6,6 +6,7 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven(uri("https://plugins.gradle.org/m2/")) // For kotlinter-gradle
+        maven("https://mvnrepository.com/artifact/com.android.tools.lint/lint-gradle-api")
     }
 
     dependencies {
@@ -19,4 +20,11 @@ buildscript {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_12.toString()
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
 }

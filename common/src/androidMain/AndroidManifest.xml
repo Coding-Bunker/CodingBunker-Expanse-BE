@@ -1,2 +1,2 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="it.github.codingbunker.tbs" />
+<manifest
+        package="it.github.codingbunker.tbs.common"/>

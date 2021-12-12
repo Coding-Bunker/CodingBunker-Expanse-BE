@@ -4,8 +4,8 @@ import com.github.kittinunf.result.coroutines.getOrNull
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.html.*
+import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
@@ -16,12 +16,18 @@ import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.extension.onFailure
 import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
-import it.codingbunker.tbs.common.html.page.bulmaHead
 import it.codingbunker.tbs.common.model.session.UserSession
 import it.codingbunker.tbs.feature.managment.repository.UserRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.feature.managment.table.UserDTO
-import kotlinx.html.*
+import it.github.codingbunker.tbs.common.model.BackendException
+import it.github.codingbunker.tbs.common.model.ExceptionCode
+import it.github.codingbunker.tbs.common.model.LoginRoute
+import it.github.codingbunker.tbs.common.model.LoginRouteDto
+import kotlinx.html.body
+import kotlinx.html.h1
+import kotlinx.html.head
+import kotlinx.html.title
 import org.koin.ktor.ext.inject
 import java.time.Duration
 import java.time.ZonedDateTime
@@ -39,7 +45,19 @@ fun Application.loginRoutes() {
         }
 
         get("${Constants.Url.BASE_API_URL}/login") {
-            call.loginPage(environment)
+            val loginList = provideOAuth2Login(environment).map {
+                val routeName = LoginRoute.getRoute(it.key)
+                return@map if (routeName != null) {
+                    LoginRouteDto(
+                        routeName,
+                        application.locations.href(Login(it.key))
+                    )
+                } else {
+                    null
+                }
+            }
+
+            call.respond(loginList)
         }
 
         location<Login>() {
@@ -66,7 +84,10 @@ fun Application.loginRoutes() {
                             }
 
                             if (userDTO == null) {
-                                call.loginFailedPage(listOf("User not found"))
+                                call.respond(
+                                    HttpStatusCode.Unauthorized,
+                                    BackendException(ExceptionCode.LOGIN_ERROR, "User not found")
+                                )
                                 return@onSuccess
                             }
 
@@ -83,25 +104,23 @@ fun Application.loginRoutes() {
 
                             call.sessions.set(userSession)
 
-//                            call.respond(HttpStatusCode.Unauthorized)
-//
-//                            //TODO REDIRECT TO CORRECT PAGE
-//                            call.respondRedirect(Constants.Security.Web.URL_REDIRECT)
-
-                            call.loggedInSuccessResponse(principal)
+                            call.loggedInSuccessResponse()
                         }.onFailure {
-                            // TODO SWITCH THIS TO FRONTEND
                             application.log.error(it)
-//                            call.respondRedirect("${Constants.Security.Web.URL_REDIRECT}/error")
 
-                            call.loginFailedPage(
-                                it.stackTrace.map {
-                                    it.toString()
-                                }
+                            call.respond(
+                                HttpStatusCode.Unauthorized,
+                                BackendException(
+                                    ExceptionCode.LOGIN_DISCORD_ERROR,
+                                    "Error Login Discord " + it.stackTrace.map { stack -> stack.toString() }.toString()
+                                )
                             )
                         }
                     } else {
-                        call.loginPage(environment)
+                        call.respond(
+                            HttpStatusCode.Unauthorized,
+                            BackendException(ExceptionCode.LOGIN_ERROR, "Error Principal")
+                        )
                     }
                 }
             }
@@ -123,47 +142,7 @@ fun Application.loginRoutes() {
     }
 }
 
-private suspend fun ApplicationCall.loginPage(environment: ApplicationEnvironment) {
-    respondHtml {
-        bulmaHead {
-            title { +"Login with" }
-        }
-        body {
-            h1 {
-                +"Login with:"
-            }
-
-            for (p in provideOAuth2Login(environment)) {
-                p {
-                    a(href = application.locations.href(Login(p.key))) {
-                        +p.key
-                    }
-                }
-            }
-        }
-    }
-}
-
-private suspend fun ApplicationCall.loginFailedPage(errors: List<String>) {
-    respondHtml {
-        head {
-            title { +"Login with" }
-        }
-        body {
-            h1 {
-                +"Login error"
-            }
-
-            for (e in errors) {
-                p {
-                    +e
-                }
-            }
-        }
-    }
-}
-
-private suspend fun ApplicationCall.loggedInSuccessResponse(callback: OAuthAccessTokenResponse) {
+private suspend fun ApplicationCall.loggedInSuccessResponse() {
     respondHtml {
         head {
             title { +"Logged in" }
@@ -172,19 +151,6 @@ private suspend fun ApplicationCall.loggedInSuccessResponse(callback: OAuthAcces
             h1 {
                 +"You are logged in"
             }
-            p {
-                +"Your token is $callback"
-            }
         }
     }
-}
-
-fun <T : Any> ApplicationCall.redirectUrl(t: T, secure: Boolean = true): String {
-    val hostPort = request.host() + request.port().let { port -> if (port == 80) "" else ":$port" }
-    val protocol = when {
-        secure -> "https"
-        else -> "http"
-    }
-
-    return "$protocol://$hostPort/index.html"
 }

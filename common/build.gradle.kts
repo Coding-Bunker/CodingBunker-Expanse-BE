@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("kotlinx-serialization")
 }
 
 version = "unspecified"
@@ -13,7 +14,7 @@ android {
     compileSdk = 31
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
-        minSdk = 28
+        minSdk = 26
         targetSdk = 31
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,4 +38,10 @@ android {
 kotlin {
     android()
     jvm()
+
+    sourceSets {
+        sourceSets["commonMain"].dependencies {
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")
+        }
+    }
 }

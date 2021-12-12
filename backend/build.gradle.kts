@@ -86,6 +86,8 @@ dependencies {
     implementation("io.insert-koin:koin-test-junit5:$koin_version")
     implementation("io.insert-koin:koin-test:$koin_version")
     implementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    implementation(project(mapOf("path" to ":common")))
+    implementation(project(mapOf("path" to ":common")))
     runtimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
     implementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
     implementation("io.mockk:mockk:$mockk_version")
@@ -101,6 +103,8 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlin_version")
     testImplementation("io.mockk:mockk:$mockk_version")
     testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+
+    implementation(project(":common"))
 }
 
 configurations.all {

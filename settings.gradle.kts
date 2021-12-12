@@ -10,6 +10,5 @@ pluginManagement {
 rootProject.name = "expansebe"
 
 include(":backend")
-include(":web")
 include(":app")
-include("common")
+include(":common")
