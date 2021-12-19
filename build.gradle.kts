@@ -1,5 +1,4 @@
 buildscript {
-    val kotlin_version: String by project
 
     repositories {
         google()
@@ -11,9 +10,13 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:7.0.4")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:${kotlin_version}")
-        classpath("org.jetbrains.kotlin:kotlin-noarg:$kotlin_version")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlinVersion}")
+        classpath("org.jetbrains.kotlin:kotlin-noarg:${Versions.kotlinVersion}")
+
+        with(Deps.Gradle) {
+            classpath(gradleVersionsPlugin)
+        }
     }
 }
 
@@ -22,7 +25,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
     kotlinOptions.freeCompilerArgs += "-Xopt-in=kotlin.time.ExperimentalTime"
 }
 
+tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>().configureEach {
+    revision = "release"
+}
+
 allprojects {
+    apply(plugin = "com.github.ben-manes.versions")
+
+
+
     repositories {
         google()
         mavenCentral()

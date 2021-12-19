@@ -24,16 +24,16 @@ android {
     }
 }
 
-android {
-    configurations {
-        create("androidTestApi")
-        create("androidTestDebugApi")
-        create("androidTestReleaseApi")
-        create("testApi")
-        create("testDebugApi")
-        create("testReleaseApi")
-    }
-}
+//android {
+//    configurations {
+//        create("androidTestApi")
+//        create("androidTestDebugApi")
+//        create("androidTestReleaseApi")
+//        create("testApi")
+//        create("testDebugApi")
+//        create("testReleaseApi")
+//    }
+//}
 
 kotlin {
     android()
@@ -41,6 +41,8 @@ kotlin {
 
     sourceSets {
         sourceSets["commonMain"].dependencies {
+
+
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")
         }
     }
