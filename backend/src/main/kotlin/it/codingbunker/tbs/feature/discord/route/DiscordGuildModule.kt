@@ -9,16 +9,16 @@ import io.ktor.locations.put
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import it.codingbunker.tbs.common.Constants
-import it.codingbunker.tbs.common.extension.onFailure
-import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
 import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.util.onFailure
+import it.github.codingbunker.tbs.common.util.onSuccess
 import org.koin.ktor.ext.inject
 
-@Location("${Constants.Url.BASE_API_URL}/discord/guild")
+@Location("${Constant.Url.BASE_API_URL}/discord/guild")
 class DiscordGuildRoute {
     @Location("/{guildId}")
     class DiscordGuildRouteId(val parent: DiscordGuildRoute, var guildId: String)

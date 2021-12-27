@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.feature.login.route
 
-import com.github.kittinunf.result.coroutines.getOrNull
+import com.github.kittinunf.result.getOrNull
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.html.*
@@ -10,20 +10,20 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import io.ktor.util.*
-import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
-import it.codingbunker.tbs.common.extension.onFailure
-import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.session.UserSession
 import it.codingbunker.tbs.feature.managment.repository.UserRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.feature.managment.table.UserDTO
+import it.github.codingbunker.tbs.common.Constant
 import it.github.codingbunker.tbs.common.model.BackendException
 import it.github.codingbunker.tbs.common.model.ExceptionCode
 import it.github.codingbunker.tbs.common.model.LoginRoute
 import it.github.codingbunker.tbs.common.model.LoginRouteDto
+import it.github.codingbunker.tbs.common.util.onFailure
+import it.github.codingbunker.tbs.common.util.onSuccess
 import kotlinx.html.body
 import kotlinx.html.h1
 import kotlinx.html.head
@@ -32,7 +32,7 @@ import org.koin.ktor.ext.inject
 import java.time.Duration
 import java.time.ZonedDateTime
 
-@Location("${Constants.Url.BASE_API_URL}/login/{type?}")
+@Location("${Constant.Url.BASE_API_URL}/login/{type?}")
 class Login(val type: String = ""/*, val error: String? = null*/)
 
 fun Application.loginRoutes() {
@@ -44,7 +44,7 @@ fun Application.loginRoutes() {
             application.log.info(it.buildText())
         }
 
-        get("${Constants.Url.BASE_API_URL}/login") {
+        get("${Constant.Url.BASE_API_URL}/login") {
             val loginList = provideOAuth2Login(environment).map {
                 val routeName = LoginRoute.getRoute(it.key)
                 return@map if (routeName != null) {
@@ -128,7 +128,7 @@ fun Application.loginRoutes() {
 
         authenticate(LOGIN_SESSION_USER) {
             withAnyRole(RoleType.ADMIN) {
-                get("${Constants.Url.BASE_API_URL}/home") {
+                get("${Constant.Url.BASE_API_URL}/home") {
                     val abc = call.sessions.get<UserSession>()
 
                     log.debug(abc?.accessToken)

@@ -11,10 +11,7 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
-import it.codingbunker.tbs.common.Constants
 import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
-import it.codingbunker.tbs.common.extension.onFailure
-import it.codingbunker.tbs.common.extension.onSuccess
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
 import it.codingbunker.tbs.feature.managment.model.bot.BotIdKeyDTO
@@ -26,10 +23,12 @@ import it.codingbunker.tbs.feature.managment.route.html.getAllBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.getConfigureNewBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.showBotConfigurationResultHtmlPage
 import it.codingbunker.tbs.feature.managment.table.RoleType
-import kotlinx.coroutines.coroutineScope
+import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.util.onFailure
+import it.github.codingbunker.tbs.common.util.onSuccess
 import org.koin.ktor.ext.inject
 
-@Location("${Constants.Url.BASE_API_URL}/managment/bot")
+@Location("${Constant.Url.BASE_API_URL}/managment/bot")
 class BotManagmentRoute {
 
     @Location("/edit")
@@ -138,10 +137,10 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
         }
     }
 
-    suspend fun PipelineContext<Unit, ApplicationCall>.deleteBot(botId: String) = coroutineScope {
+    suspend fun PipelineContext<Unit, ApplicationCall>.deleteBot(botId: String) {
         if (botId.isBlank()) {
             call.respond(HttpStatusCode.BadRequest)
-            return@coroutineScope
+            return
         }
 
         val exist = botRepository.existBotById(botId)

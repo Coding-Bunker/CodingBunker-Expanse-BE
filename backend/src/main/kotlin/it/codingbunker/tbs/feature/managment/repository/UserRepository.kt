@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.feature.managment.repository
 
-import com.github.kittinunf.result.coroutines.SuspendableResult
+import com.github.kittinunf.result.Result
 import it.codingbunker.tbs.common.client.discord.model.DiscordOAuth2User
 import it.codingbunker.tbs.feature.managment.table.*
 import org.jetbrains.exposed.sql.SizedCollection
@@ -12,7 +12,7 @@ interface UserRepository {
 
     suspend fun generateUserByDiscordUser(discordOAuth2User: DiscordOAuth2User): UserDTO
 
-    suspend fun findUserByDiscordId(discordId: String): SuspendableResult<UserDTO, Exception>
+    suspend fun findUserByDiscordId(discordId: String): Result<UserDTO, Exception>
 }
 
 class UserRepositoryImpl(private val authorizedAdminUserList: List<String>) : UserRepository {
@@ -41,9 +41,9 @@ class UserRepositoryImpl(private val authorizedAdminUserList: List<String>) : Us
             }.convertToUserDTO()
         }
 
-    override suspend fun findUserByDiscordId(discordId: String): SuspendableResult<UserDTO, Exception> =
+    override suspend fun findUserByDiscordId(discordId: String): Result<UserDTO, Exception> =
         newSuspendedTransaction {
-            SuspendableResult.of {
+            Result.of {
                 val result = User.find {
                     Users.discordId eq discordId
                 }

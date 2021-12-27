@@ -25,7 +25,6 @@ kotlinter {
 
 dependencies {
     implementation(kotlin("reflect"))
-
     with(Deps.Kotlinx) {
         implementation(kotlinJdk8)
         implementation(dateTimeX)
@@ -64,7 +63,6 @@ dependencies {
 
     with(Deps.KResult) {
         implementation(result)
-        implementation(coroutine)
     }
 
     with(Deps.Exposed) {

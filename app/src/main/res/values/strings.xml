@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Coding Bunker App</string>
+    <string name="discord_login">Log In with Discord</string>
 </resources>

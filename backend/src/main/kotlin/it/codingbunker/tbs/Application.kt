@@ -1,6 +1,6 @@
 package it.codingbunker.tbs
 
-import com.github.kittinunf.result.coroutines.SuspendableResult
+import com.github.kittinunf.result.Result
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.client.*
@@ -29,6 +29,7 @@ import it.codingbunker.tbs.feature.login.route.Login
 import it.codingbunker.tbs.feature.login.route.provideOAuth2Login
 import it.codingbunker.tbs.feature.managment.model.bot.BotPrincipal
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
+import it.codingbunker.tbs.feature.managment.table.BotDTO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -136,7 +137,7 @@ fun Application.mainModule(
             validate { userPasswordCredential ->
                 val bot = botRepository.findBotById(userPasswordCredential.name)
 
-                if (bot is SuspendableResult.Success) {
+                if (bot is Result.Success<BotDTO>) {
                     BotPrincipal(bot.value.id, bot.value.botRoles)
                 } else {
                     null

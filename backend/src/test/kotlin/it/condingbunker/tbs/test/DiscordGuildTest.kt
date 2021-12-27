@@ -8,7 +8,6 @@ import it.codingbunker.tbs.common.Constants.Database.ADDRESS_DB_KEY
 import it.codingbunker.tbs.common.Constants.Database.DRIVER_DB_KEY
 import it.codingbunker.tbs.common.Constants.Database.PASSWORD_DB_KEY
 import it.codingbunker.tbs.common.Constants.Database.USERNAME_DB_KEY
-import it.codingbunker.tbs.common.Constants.Url.BASE_API_URL
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.extension.getPropertyString
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
@@ -18,6 +17,7 @@ import it.codingbunker.tbs.feature.discord.route.discordGuildRoutes
 import it.codingbunker.tbs.feature.managment.table.Bot
 import it.codingbunker.tbs.mainModule
 import it.condingbunker.tbs.test.utilstest.*
+import it.github.codingbunker.tbs.common.Constant.Url.BASE_API_URL
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import org.jetbrains.exposed.sql.transactions.TransactionManager

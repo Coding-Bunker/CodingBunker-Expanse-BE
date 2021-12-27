@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.common.client.discord
 
-import com.github.kittinunf.result.coroutines.SuspendableResult
+import com.github.kittinunf.result.Result
 import io.ktor.auth.*
 import io.ktor.client.*
 import io.ktor.client.features.*
@@ -39,8 +39,8 @@ class OAuth2DiscordClient(private val client: HttpClient) {
         }
     }
 
-    suspend fun getUser(token: OAuthAccessTokenResponse.OAuth2): SuspendableResult<DiscordOAuth2User, Exception> {
-        return SuspendableResult.of {
+    suspend fun getUser(token: OAuthAccessTokenResponse.OAuth2): Result<DiscordOAuth2User, Exception> {
+        return Result.of {
             try {
                 return@of client.get<DiscordOAuth2User>("$BASE_API_URL/users/@me") {
                     header(HttpHeaders.Authorization, "${token.tokenType} ${token.accessToken}")

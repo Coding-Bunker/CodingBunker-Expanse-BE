@@ -17,6 +17,7 @@ import it.condingbunker.tbs.test.utilstest.BaseTest
 import it.condingbunker.tbs.test.utilstest.getBotMock
 import it.condingbunker.tbs.test.utilstest.toJson
 import it.condingbunker.tbs.test.utilstest.withRealTestApplication
+import it.github.codingbunker.tbs.common.Constant.Url.BASE_API_URL
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -143,7 +144,7 @@ class BotManagmentTest : BaseTest() {
                         )
                     ).toJson()
 
-                    handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
+                    handleRequest(HttpMethod.Put, "${BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         setBody(request)
                     }.apply {
@@ -166,7 +167,7 @@ class BotManagmentTest : BaseTest() {
                         )
                     ).toJson()
 
-                    handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
+                    handleRequest(HttpMethod.Put, "${BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         setBody(request)
                     }.apply {
@@ -186,7 +187,7 @@ class BotManagmentTest : BaseTest() {
                         "botName" to "Ciao", "roleList" to listOf<String>()
                     ).toJson()
 
-                    handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
+                    handleRequest(HttpMethod.Put, "${BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         setBody(request)
                     }.apply {
@@ -206,7 +207,7 @@ class BotManagmentTest : BaseTest() {
                         "botName" to "Ciao", "roleList" to null
                     ).toJson()
 
-                    handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
+                    handleRequest(HttpMethod.Put, "${BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         setBody(request)
                     }.apply {
@@ -226,7 +227,7 @@ class BotManagmentTest : BaseTest() {
                         "botName" to "", "roleList" to listOf("ABC")
                     ).toJson()
 
-                    handleRequest(HttpMethod.Put, "${Constants.Url.BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
+                    handleRequest(HttpMethod.Put, "${BASE_API_URL}/managment/bot/edit", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                         setBody(request)
                     }.apply {
@@ -251,7 +252,7 @@ class BotManagmentTest : BaseTest() {
 
                     handleRequest(
                         HttpMethod.Delete,
-                        "${Constants.Url.BASE_API_URL}/managment/bot/${bot.id}",
+                        "${BASE_API_URL}/managment/bot/${bot.id}",
                         botAdmin
                     ) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
@@ -282,7 +283,7 @@ class BotManagmentTest : BaseTest() {
                 installModuleToTest()
             }) {
                 cookiesSession {
-                    handleRequest(HttpMethod.Delete, "${Constants.Url.BASE_API_URL}/managment/bot/", getMockAdmin()) {
+                    handleRequest(HttpMethod.Delete, "${BASE_API_URL}/managment/bot/", getMockAdmin()) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                     }.apply {
                         assertEquals(HttpStatusCode.NotFound, response.status())
@@ -299,7 +300,7 @@ class BotManagmentTest : BaseTest() {
                 cookiesSession {
                     handleRequest(
                         HttpMethod.Delete,
-                        "${Constants.Url.BASE_API_URL}/managment/bot/${UUID.randomUUID()}",
+                        "${BASE_API_URL}/managment/bot/${UUID.randomUUID()}",
                         getMockAdmin()
                     ) {
                         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())

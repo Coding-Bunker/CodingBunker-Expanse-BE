@@ -1,6 +1,8 @@
 import Versions.exposedVersion
 import Versions.junitVersion
+import Versions.kermitVersion
 import Versions.koinVersion
+import Versions.kotlinCoroutines
 import Versions.kotlinVersion
 import Versions.kotlinxDateTimeVersion
 import Versions.ktorVersion
@@ -13,7 +15,9 @@ object Versions {
     const val androidTargetSdk = androidCompileSdk
 
     const val kotlinVersion = "1.5.31"
+    const val kotlinCoroutines = "1.5.2"
     const val ktorVersion = "1.6.5"
+    const val kotlinxSerialization = "1.3.1"
 
     const val koinVersion = "3.1.3"
     const val logbackVersion = "1.2.7"
@@ -21,7 +25,7 @@ object Versions {
 
     const val kotlinxDateTimeVersion = "0.3.1"
 
-//    const val rsocketVersion = "0.14.3"
+//   const val rsocketVersion = "0.14.3"
 
     const val mockkVersion = "1.11.0"
     const val junitVersion = "5.8.2"
@@ -29,6 +33,8 @@ object Versions {
     const val kotlinterVersion = "3.3.0"
 
     const val gradleVersionsPlugin = "0.39.0"
+
+    const val kermitVersion = "1.0.0"
 }
 
 object Deps {
@@ -39,6 +45,9 @@ object Deps {
     object Kotlinx {
         const val kotlinJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
         const val dateTimeX = "org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDateTimeVersion"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutines"
+        const val serializationCore =
+            "org.jetbrains.kotlinx:kotlinx-serialization-core:${Versions.kotlinxSerialization}"
     }
 
     object Ktor {
@@ -60,17 +69,21 @@ object Deps {
         const val serialization = "io.ktor:ktor-client-serialization:$ktorVersion"
         const val apache = "io.ktor:ktor-client-apache:$ktorVersion"
         const val logging = "io.ktor:ktor-client-logging:$ktorVersion"
+        const val json = "io.ktor:ktor-client-json:$ktorVersion"
     }
 
     object Koin {
+        const val core = "io.insert-koin:koin-core:$koinVersion"
+        const val test = "io.insert-koin:koin-test:$koinVersion"
         const val ktor = "io.insert-koin:koin-ktor:$koinVersion"
         const val logger = "io.insert-koin:koin-logger-slf4j:$koinVersion"
         const val ext = "io.insert-koin:koin-core-ext:3.0.2"
+        const val android = "io.insert-koin:koin-android:$koinVersion"
+        const val compose = "io.insert-koin:koin-androidx-compose:$koinVersion"
     }
 
     object KResult {
         const val result = "com.github.kittinunf.result:result:5.2.0"
-        const val coroutine = "com.github.kittinunf.result:result-coroutines:4.0.0"
     }
 
     object Exposed {
@@ -110,5 +123,6 @@ object Deps {
 
     object Log {
         const val logback = "ch.qos.logback:logback-classic:$logbackVersion"
+        const val kermit = "co.touchlab:kermit:$kermitVersion"
     }
 }

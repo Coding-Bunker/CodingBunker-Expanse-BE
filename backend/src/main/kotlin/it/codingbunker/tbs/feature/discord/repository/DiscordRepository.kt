@@ -1,11 +1,11 @@
 package it.codingbunker.tbs.data.repo
 
-import com.github.kittinunf.result.coroutines.SuspendableResult
-import it.codingbunker.tbs.common.extension.onFailure
+import com.github.kittinunf.result.Result
 import it.codingbunker.tbs.common.repository.BaseRepository
 import it.codingbunker.tbs.data.table.DiscordGuild
 import it.codingbunker.tbs.data.table.DiscordGuilds
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
+import it.github.codingbunker.tbs.common.util.onFailure
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
@@ -14,13 +14,13 @@ import java.sql.Connection.TRANSACTION_SERIALIZABLE
 interface DiscordRepositoryInterface {
     suspend fun createDiscordGuild(discordGuild: DiscordGuildDTO)
 
-    suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): SuspendableResult<DiscordGuildDTO, Exception>
+    suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): Result<DiscordGuildDTO, Exception>
 
     suspend fun existDiscordGuildById(guildId: String): Boolean
 
     suspend fun getDiscordGuildById(guildId: String): DiscordGuildDTO?
 
-    suspend fun deleteDiscordGuildById(guildId: String): SuspendableResult<Int, Exception>
+    suspend fun deleteDiscordGuildById(guildId: String): Result<Int, Exception>
 }
 
 class DiscordRepository : BaseRepository(), DiscordRepositoryInterface {
@@ -40,7 +40,7 @@ class DiscordRepository : BaseRepository(), DiscordRepositoryInterface {
         }
     }
 
-    override suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): SuspendableResult<DiscordGuildDTO, Exception> =
+    override suspend fun updateDiscordGuild(discordGuild: DiscordGuildDTO): Result<DiscordGuildDTO, Exception> =
         newSuspendedTransaction {
             DiscordGuilds.update({ DiscordGuilds.id eq discordGuild.guildId }) {
                 it[guildName] = discordGuild.guildName
@@ -49,7 +49,7 @@ class DiscordRepository : BaseRepository(), DiscordRepositoryInterface {
 
             commit()
 
-            return@newSuspendedTransaction SuspendableResult.of<DiscordGuildDTO, Exception> {
+            return@newSuspendedTransaction Result.of<DiscordGuildDTO, Exception> {
                 newSuspendedTransaction(
                     context = Dispatchers.IO, transactionIsolation = TRANSACTION_SERIALIZABLE
                 ) {
@@ -80,9 +80,9 @@ class DiscordRepository : BaseRepository(), DiscordRepositoryInterface {
         )
     }
 
-    override suspend fun deleteDiscordGuildById(guildId: String): SuspendableResult<Int, Exception> =
+    override suspend fun deleteDiscordGuildById(guildId: String): Result<Int, Exception> =
         newSuspendedTransaction {
-            SuspendableResult.of<Int, Exception> {
+            Result.of<Int, Exception> {
                 newSuspendedTransaction {
                     addLogger(Slf4jSqlDebugLogger)
 

@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("kotlinx-serialization")
+    id("com.rickclephas.kmp.nativecoroutines")
 }
 
 version = "unspecified"
@@ -42,8 +43,35 @@ kotlin {
     sourceSets {
         sourceSets["commonMain"].dependencies {
 
+            with(Deps.KtorClient) {
+                implementation(core)
+                implementation(serialization)
+                implementation(logging)
+                implementation(json)
+            }
 
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.1")
+            with(Deps.Kotlinx) {
+                implementation(coroutinesCore)
+                implementation(serializationCore)
+            }
+
+            with(Deps.Koin) {
+                api(core)
+                api(test)
+            }
+
+            with(Deps.KResult) {
+                implementation(result)
+            }
+
+            with(Deps.Log) {
+                api(kermit)
+            }
+        }
+
+        sourceSets["androidMain"].dependencies {
+//            implementation(Deps.Ktor.clientAndroid)
+//            implementation(Deps.SqlDelight.androidDriver)
         }
     }
 }

@@ -14,6 +14,9 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-serialization:${Versions.kotlinVersion}")
         classpath("org.jetbrains.kotlin:kotlin-noarg:${Versions.kotlinVersion}")
 
+        val kmpNativeCoroutinesVersion = if (Versions.kotlinVersion == "1.6.10") "0.10.0-new-mm" else "0.8.0"
+        classpath("com.rickclephas.kmp:kmp-nativecoroutines-gradle-plugin:$kmpNativeCoroutinesVersion")
+
         with(Deps.Gradle) {
             classpath(gradleVersionsPlugin)
         }

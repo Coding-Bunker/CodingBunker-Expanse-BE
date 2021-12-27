@@ -7,10 +7,6 @@ object Constants {
 
     private const val BASE_KEY = "ktor"
 
-    object Url {
-        const val BASE_API_URL = "/tbs/api"
-    }
-
     object Session {
         const val LOGIN_SESSION_USER = "LOGIN_SESSION_USER"
     }

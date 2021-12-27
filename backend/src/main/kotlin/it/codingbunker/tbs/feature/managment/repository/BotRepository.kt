@@ -1,10 +1,10 @@
 package it.codingbunker.tbs.feature.managment.repository
 
-import com.github.kittinunf.result.coroutines.SuspendableResult
-import it.codingbunker.tbs.common.extension.onFailure
+import com.github.kittinunf.result.Result
 import it.codingbunker.tbs.common.extension.sha256Base64
 import it.codingbunker.tbs.common.repository.BaseRepository
 import it.codingbunker.tbs.feature.managment.table.*
+import it.github.codingbunker.tbs.common.util.onFailure
 import kotlinx.datetime.*
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
@@ -17,10 +17,10 @@ interface BotRepository {
 
     suspend fun generateBot(botName: String, roleList: Set<RoleType>): BotDTO
 
-    suspend fun findBotById(botId: String): SuspendableResult<BotDTO, Exception>
+    suspend fun findBotById(botId: String): Result<BotDTO, Exception>
 
-    suspend fun deleteBotById(botId: String): SuspendableResult<Boolean, Exception>
-    suspend fun getAllBots(): SuspendableResult<List<BotDTO>, Exception>
+    suspend fun deleteBotById(botId: String): Result<Boolean, Exception>
+    suspend fun getAllBots(): Result<List<BotDTO>, Exception>
 }
 
 class BotRepositoryImpl : BaseRepository(), BotRepository {
@@ -59,10 +59,10 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
         }
     }
 
-    override suspend fun findBotById(botId: String): SuspendableResult<BotDTO, Exception> = newSuspendedTransaction {
+    override suspend fun findBotById(botId: String): Result<BotDTO, Exception> = newSuspendedTransaction {
         addLogger(Slf4jSqlDebugLogger)
 
-        SuspendableResult.of {
+        Result.of {
             val result = Bot.find {
                 Bots.id eq UID.fromString(botId)
             }
@@ -75,8 +75,8 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
         }
     }
 
-    override suspend fun getAllBots(): SuspendableResult<List<BotDTO>, Exception> = newSuspendedTransaction {
-        SuspendableResult.of {
+    override suspend fun getAllBots(): Result<List<BotDTO>, Exception> = newSuspendedTransaction {
+        Result.of {
             Bot.all().map {
                 it.convertToDTO()
             }
@@ -84,7 +84,7 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
     }
 
     override suspend fun deleteBotById(botId: String) = newSuspendedTransaction {
-        SuspendableResult.of<Boolean, Exception> {
+        Result.of<Boolean, Exception> {
             Bot.find {
                 Bots.id eq UID.fromString(botId)
             }.first().delete()
