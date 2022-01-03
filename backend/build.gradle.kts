@@ -73,7 +73,7 @@ dependencies {
         implementation(postgresql)
         implementation(apacheCommonText)
 
-        testImplementation(h2)
+        implementation(h2)
     }
 
 //    with(Deps.RSocket){
