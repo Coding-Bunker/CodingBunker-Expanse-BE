@@ -1,3 +1,5 @@
 package it.github.codingbunker.tbs.common.repository
 
-//expect fun platformModule(): Module
+import org.koin.core.module.Module
+
+expect fun platformModule(): Module

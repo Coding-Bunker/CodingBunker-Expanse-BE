@@ -10,7 +10,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import io.ktor.util.*
-import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.session.UserSession
@@ -18,6 +17,8 @@ import it.codingbunker.tbs.feature.managment.repository.UserRepository
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.feature.managment.table.UserDTO
 import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.Constant.AppLink.HOST_NAME
+import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
 import it.github.codingbunker.tbs.common.model.BackendException
 import it.github.codingbunker.tbs.common.model.ExceptionCode
 import it.github.codingbunker.tbs.common.model.LoginRoute
@@ -34,6 +35,9 @@ import java.time.ZonedDateTime
 
 @Location("${Constant.Url.BASE_API_URL}/login/{type?}")
 class Login(val type: String = ""/*, val error: String? = null*/)
+
+@Location("${Constant.Url.BASE_API_URL}/login/success")
+class LoginSuccess
 
 fun Application.loginRoutes() {
     routing {
@@ -60,7 +64,7 @@ fun Application.loginRoutes() {
             call.respond(loginList)
         }
 
-        location<Login>() {
+        location<Login> {
 
 //            optionalParam("error") {
 //                handle {
@@ -104,7 +108,10 @@ fun Application.loginRoutes() {
 
                             call.sessions.set(userSession)
 
-                            call.loggedInSuccessResponse()
+                            val urlRedirect = application.locations.href(LoginSuccess())
+
+                            call.respondRedirect(urlRedirect)
+
                         }.onFailure {
                             application.log.error(it)
 
@@ -127,15 +134,20 @@ fun Application.loginRoutes() {
         }
 
         authenticate(LOGIN_SESSION_USER) {
-            withAnyRole(RoleType.ADMIN) {
-                get("${Constant.Url.BASE_API_URL}/home") {
-                    val abc = call.sessions.get<UserSession>()
+            withAnyRole(RoleType.ADMIN, RoleType.USER) {
+                get<LoginSuccess> {
+                    val id = call.sessionId<UserSession>()
 
-                    log.debug(abc?.accessToken)
-
-                    call.respondText {
-                        "Test OAuth"
+                    val urlRedirect = url {
+                        protocol = URLProtocol(Constant.AppLink.PROTOCOL_NAME, Constant.AppLink.PROTOCOL_PORT)
+                        host = HOST_NAME
+                        path(Constant.Url.LOGIN_SUCCESS_PATH)
+                        if (id != null) {
+                            parameters[LOGIN_SESSION_USER] = id
+                        }
                     }
+
+                    call.respondRedirect(urlRedirect)
                 }
             }
         }

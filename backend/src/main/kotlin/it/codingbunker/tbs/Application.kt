@@ -11,10 +11,10 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
+import io.ktor.server.tomcat.*
 import io.ktor.sessions.*
 import io.ktor.websocket.*
 import it.codingbunker.tbs.common.Constants
-import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.client.TakaoSQLClient
 import it.codingbunker.tbs.common.di.KoinModules
 import it.codingbunker.tbs.common.di.loadKoinModules
@@ -30,6 +30,8 @@ import it.codingbunker.tbs.feature.login.route.provideOAuth2Login
 import it.codingbunker.tbs.feature.managment.model.bot.BotPrincipal
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import it.codingbunker.tbs.feature.managment.table.BotDTO
+import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
+import it.github.codingbunker.tbs.common.Constant.Url.SERVER_URL_ENDPOINT
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
@@ -42,7 +44,7 @@ import java.time.Duration
 import kotlin.collections.set
 
 fun main(args: Array<String>) {
-    io.ktor.server.tomcat.EngineMain.main(args)
+    EngineMain.main(args)
 }
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -53,6 +55,7 @@ fun Application.mainModule(
         add(KoinModules.getExternalHttpClientModule())
     }
 ) {
+
     install(Koin) {
         slf4jLogger()
         // https://github.com/InsertKoinIO/koin/issues/1076 TODO
@@ -153,7 +156,7 @@ fun Application.mainModule(
                 provideOAuth2Login(environment)[application.locations.resolve<Login>(Login::class, this).type]
             }
             urlProvider = {
-                "http://127.0.0.1:8080${application.locations.href(Login(it.name))}"
+                SERVER_URL_ENDPOINT + application.locations.href(Login(it.name))
             }
         }
 

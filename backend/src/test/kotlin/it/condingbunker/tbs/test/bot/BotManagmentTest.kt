@@ -6,8 +6,6 @@ import io.ktor.client.engine.mock.*
 import io.ktor.config.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import it.codingbunker.tbs.common.Constants
-import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.feature.login.route.loginRoutes
 import it.codingbunker.tbs.feature.managment.route.botManagmentRoutes
 import it.codingbunker.tbs.feature.managment.table.Bots
@@ -17,6 +15,7 @@ import it.condingbunker.tbs.test.utilstest.BaseTest
 import it.condingbunker.tbs.test.utilstest.getBotMock
 import it.condingbunker.tbs.test.utilstest.toJson
 import it.condingbunker.tbs.test.utilstest.withRealTestApplication
+import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
 import it.github.codingbunker.tbs.common.Constant.Url.BASE_API_URL
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.select
@@ -122,7 +121,7 @@ class BotManagmentTest : BaseTest() {
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             addHeader("Host", "127.0.0.1")
         }.let { call ->
-            responseCookies = call.response.cookies[Constants.Session.LOGIN_SESSION_USER]
+            responseCookies = call.response.cookies[LOGIN_SESSION_USER]
         }
 
         return responseCookies!!

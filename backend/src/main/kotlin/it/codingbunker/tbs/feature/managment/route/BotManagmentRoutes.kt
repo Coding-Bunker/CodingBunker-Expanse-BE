@@ -11,7 +11,6 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
-import it.codingbunker.tbs.common.Constants.Session.LOGIN_SESSION_USER
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.response.ExceptionResponse
 import it.codingbunker.tbs.feature.managment.model.bot.BotIdKeyDTO
@@ -24,6 +23,7 @@ import it.codingbunker.tbs.feature.managment.route.html.getConfigureNewBotHtmlPa
 import it.codingbunker.tbs.feature.managment.route.html.showBotConfigurationResultHtmlPage
 import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
 import it.github.codingbunker.tbs.common.util.onFailure
 import it.github.codingbunker.tbs.common.util.onSuccess
 import org.koin.ktor.ext.inject

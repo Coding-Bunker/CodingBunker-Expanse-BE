@@ -1,11 +1,21 @@
+import org.jetbrains.kotlin.konan.properties.Properties
+import java.io.FileInputStream
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
-    id("kotlinx-serialization")
+    kotlin("plugin.serialization")
     id("com.rickclephas.kmp.nativecoroutines")
+    id("com.github.gmazzo.buildconfig") version "3.0.3"
 }
 
 version = "unspecified"
+
+val prop = Properties().apply {
+    load(FileInputStream(File(rootProject.rootDir, "local.properties")))
+}
+
+println("Property:" + prop.getProperty("server.local.url"))
 
 repositories {
     mavenCentral()
@@ -41,36 +51,47 @@ kotlin {
     jvm()
 
     sourceSets {
-        sourceSets["commonMain"].dependencies {
+        sourceSets["commonMain"].apply {
+            buildConfig {
+                className("BuildConfigGenerated")
+                packageName("it.github.codingbunker.tbs.common")
 
-            with(Deps.KtorClient) {
-                implementation(core)
-                implementation(serialization)
-                implementation(logging)
-                implementation(json)
+                buildConfigField("String", "SERVER_URL", "\"${prop.getProperty("server.local.url")}\"")
+                buildConfigField("String", "SERVER_PORT", "\"${prop.getProperty("server.local.port")}\"")
             }
 
-            with(Deps.Kotlinx) {
-                implementation(coroutinesCore)
-                implementation(serializationCore)
-            }
+            dependencies {
 
-            with(Deps.Koin) {
-                api(core)
-                api(test)
-            }
+                with(Deps.KtorClient) {
+                    implementation(core)
+                    implementation(serialization)
+                    implementation(logging)
+                    implementation(json)
+                }
 
-            with(Deps.KResult) {
-                implementation(result)
-            }
+                with(Deps.Kotlinx) {
+                    implementation(coroutinesCore)
+                    implementation(serializationCore)
+                }
 
-            with(Deps.Log) {
-                api(kermit)
+                with(Deps.Koin) {
+                    api(core)
+                    api(test)
+                }
+
+                with(Deps.KResult) {
+                    implementation(result)
+                }
+
+                with(Deps.Log) {
+                    api(kermit)
+                }
             }
         }
 
         sourceSets["androidMain"].dependencies {
-//            implementation(Deps.Ktor.clientAndroid)
+            implementation(Deps.KtorClient.okhttp)
+            implementation(Deps.Log.logback)
 //            implementation(Deps.SqlDelight.androidDriver)
         }
     }

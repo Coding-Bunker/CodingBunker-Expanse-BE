@@ -7,10 +7,6 @@ object Constants {
 
     private const val BASE_KEY = "ktor"
 
-    object Session {
-        const val LOGIN_SESSION_USER = "LOGIN_SESSION_USER"
-    }
-
     object Database {
         private const val BASE_KEY = "database"
 

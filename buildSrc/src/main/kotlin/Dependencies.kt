@@ -70,6 +70,7 @@ object Deps {
         const val apache = "io.ktor:ktor-client-apache:$ktorVersion"
         const val logging = "io.ktor:ktor-client-logging:$ktorVersion"
         const val json = "io.ktor:ktor-client-json:$ktorVersion"
+        const val okhttp = "io.ktor:ktor-client-okhttp:$ktorVersion"
     }
 
     object Koin {
