@@ -111,7 +111,6 @@ fun Application.loginRoutes() {
                             val urlRedirect = application.locations.href(LoginSuccess())
 
                             call.respondRedirect(urlRedirect)
-
                         }.onFailure {
                             application.log.error(it)
 

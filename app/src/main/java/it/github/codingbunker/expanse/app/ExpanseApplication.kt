@@ -10,8 +10,7 @@ class ExpanseApplication : Application() {
         super.onCreate()
 
         initKoin(
-            enableNetworkLogs = true,
-            baseUrl = ""
+            enableNetworkLogs = true
         ) {
             androidContext(this@ExpanseApplication)
             modules(appModule)

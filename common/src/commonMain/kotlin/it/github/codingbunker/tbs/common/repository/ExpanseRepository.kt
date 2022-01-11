@@ -12,12 +12,13 @@ interface ExpanseRepository {
 }
 
 class ExpanseRepositoryImpl(
-    private val expaseApi: ExpanseApi
+    private val expaseApi: ExpanseApi,
+    private val cookieRepository: CookieRepository
 ) : KoinComponent, ExpanseRepository {
 //    @NativeCoroutineScope
 //    private val coroutineScope: CoroutineScope = MainScope()
 
-    val logger = Logger.withTag("ExpanseRepository")
+    private val logger = Logger.withTag("ExpanseRepository")
 
     override suspend fun fetchLoginMethod(): Result<List<LoginRouteDto>, Exception> {
         return Result.of<List<LoginRouteDto>, Exception> {
@@ -25,5 +26,9 @@ class ExpanseRepositoryImpl(
         }.onFailure {
             logger.e("Error fetchLoginMethod", it)
         }
+    }
+
+    fun onCookieReceive(cookieKey: String) {
+        cookieRepository.saveCookie(cookieKey)
     }
 }

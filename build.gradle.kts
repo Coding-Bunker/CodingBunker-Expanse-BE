@@ -35,10 +35,9 @@ tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 allprojects {
     apply(plugin = "com.github.ben-manes.versions")
 
-
-
     repositories {
         google()
         mavenCentral()
+        maven("https://dl.bintray.com/florent37/maven")
     }
 }

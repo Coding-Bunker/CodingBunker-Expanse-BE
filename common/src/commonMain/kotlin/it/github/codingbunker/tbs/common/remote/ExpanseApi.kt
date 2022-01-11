@@ -7,8 +7,8 @@ import it.github.codingbunker.tbs.common.model.LoginRouteDto
 
 class ExpanseApi(
     private val client: HttpClient,
-    val baseUrl: String
 ) {
+    //TODO CHANGE THIS TO BUILD CONFIG
     suspend fun getAvailableLogin(): List<LoginRouteDto> =
         client.get("${Constant.Url.BASE_API_URL}/login")
 }
