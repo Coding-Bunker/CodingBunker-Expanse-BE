@@ -69,7 +69,7 @@ dependencies {
         implementation(core)
         implementation(dao)
         implementation(jdbc)
-        implementation(javaTime)
+        implementation(kotlinDateTime)
         implementation(postgresql)
         implementation(apacheCommonText)
 

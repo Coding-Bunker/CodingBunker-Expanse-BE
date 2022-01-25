@@ -18,12 +18,11 @@ import it.codingbunker.tbs.feature.managment.model.bot.request.BotCreateRequest
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_NAME_ID
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_PERMISSION_ID
-import it.codingbunker.tbs.feature.managment.route.html.getAllBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.getConfigureNewBotHtmlPage
 import it.codingbunker.tbs.feature.managment.route.html.showBotConfigurationResultHtmlPage
-import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.github.codingbunker.tbs.common.Constant
 import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
+import it.github.codingbunker.tbs.common.model.RoleType
 import it.github.codingbunker.tbs.common.util.onFailure
 import it.github.codingbunker.tbs.common.util.onSuccess
 import org.koin.ktor.ext.inject
@@ -94,7 +93,8 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                 get<BotManagmentRoute.Settings> {
                     botRepository.getAllBots()
                         .onSuccess {
-                            call.getAllBotHtmlPage(it)
+                            call.respond(it)
+//                            call.getAllBotHtmlPage(it)
                         }.onFailure {
                             call.respond(HttpStatusCode.InternalServerError)
                         }

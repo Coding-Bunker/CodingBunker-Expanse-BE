@@ -14,15 +14,11 @@ import it.codingbunker.tbs.common.client.discord.OAuth2DiscordClient
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.common.model.session.UserSession
 import it.codingbunker.tbs.feature.managment.repository.UserRepository
-import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.feature.managment.table.UserDTO
 import it.github.codingbunker.tbs.common.Constant
 import it.github.codingbunker.tbs.common.Constant.AppLink.HOST_NAME
 import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
-import it.github.codingbunker.tbs.common.model.BackendException
-import it.github.codingbunker.tbs.common.model.ExceptionCode
-import it.github.codingbunker.tbs.common.model.LoginRoute
-import it.github.codingbunker.tbs.common.model.LoginRouteDto
+import it.github.codingbunker.tbs.common.model.*
 import it.github.codingbunker.tbs.common.util.onFailure
 import it.github.codingbunker.tbs.common.util.onSuccess
 import kotlinx.html.body

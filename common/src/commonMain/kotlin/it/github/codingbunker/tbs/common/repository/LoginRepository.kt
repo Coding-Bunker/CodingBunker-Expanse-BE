@@ -7,13 +7,13 @@ import it.github.codingbunker.tbs.common.model.LoginRouteDto
 import it.github.codingbunker.tbs.common.remote.ExpanseApi
 import org.koin.core.component.KoinComponent
 
-interface ExpanseRepository {
+interface LoginRepository {
     suspend fun fetchLoginMethod(): Result<List<LoginRouteDto>, Exception>
 }
 
-class ExpanseRepositoryImpl(
+class LoginRepositoryImpl(
     private val expaseApi: ExpanseApi
-) : KoinComponent, ExpanseRepository {
+) : KoinComponent, LoginRepository {
 //    @NativeCoroutineScope
 //    private val coroutineScope: CoroutineScope = MainScope()
 

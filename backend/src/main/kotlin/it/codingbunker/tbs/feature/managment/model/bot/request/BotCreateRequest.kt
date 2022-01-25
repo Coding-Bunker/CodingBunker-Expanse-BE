@@ -1,6 +1,6 @@
 package it.codingbunker.tbs.feature.managment.model.bot.request
 
-import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.github.codingbunker.tbs.common.model.RoleType
 import kotlinx.serialization.Required
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

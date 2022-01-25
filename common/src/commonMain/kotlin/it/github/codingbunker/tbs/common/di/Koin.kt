@@ -12,10 +12,7 @@ import it.github.codingbunker.tbs.common.BuildConfigGenerated
 import it.github.codingbunker.tbs.common.Constant
 import it.github.codingbunker.tbs.common.Constant.Session.COOKIE_STORE
 import it.github.codingbunker.tbs.common.remote.ExpanseApi
-import it.github.codingbunker.tbs.common.repository.CookieRepository
-import it.github.codingbunker.tbs.common.repository.ExpanseRepository
-import it.github.codingbunker.tbs.common.repository.ExpanseRepositoryImpl
-import it.github.codingbunker.tbs.common.repository.platformModule
+import it.github.codingbunker.tbs.common.repository.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
@@ -42,7 +39,9 @@ fun commonModule(enableNetworkLogs: Boolean) = module {
     single { Dispatchers.Default + SupervisorJob() } bind CoroutineContext::class
 
     single { CookieRepository(get(named(COOKIE_STORE))) }
-    single { ExpanseRepositoryImpl(get()) } bind ExpanseRepository::class
+    single { LoginRepositoryImpl(get()) } bind LoginRepository::class
+
+    single { BotManagementRepositoryImpl(get()) } bind BotManagementRepository::class
 
     single { ExpanseApi(get()) }
 }

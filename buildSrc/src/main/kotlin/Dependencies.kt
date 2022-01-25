@@ -1,5 +1,6 @@
 import Versions.androidXCryptoVersion
 import Versions.datastoreXVersion
+import Versions.dateTimeXVersion
 import Versions.exposedVersion
 import Versions.junitVersion
 import Versions.kermitVersion
@@ -43,6 +44,7 @@ object Versions {
     const val kermitVersion = "1.0.0"
 
     const val androidXCryptoVersion = "1.0.0"
+    const val dateTimeXVersion = "0.3.2"
 }
 
 object Deps {
@@ -99,6 +101,8 @@ object Deps {
         const val core = "org.jetbrains.exposed:exposed-core:$exposedVersion"
         const val dao = "org.jetbrains.exposed:exposed-dao:$exposedVersion"
         const val jdbc = "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
+        const val kotlinDateTime = "org.jetbrains.exposed:exposed-kotlin-datetime:$exposedVersion"
+
         const val javaTime = "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
         const val apacheCommonText = "org.apache.commons:commons-text:1.8"
 
@@ -142,5 +146,9 @@ object Deps {
     object Log {
         const val logback = "ch.qos.logback:logback-classic:$logbackVersion"
         const val kermit = "co.touchlab:kermit:$kermitVersion"
+    }
+
+    object DateTime {
+        const val dateTimeX = "org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeXVersion"
     }
 }

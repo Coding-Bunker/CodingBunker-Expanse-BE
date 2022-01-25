@@ -1,17 +1,12 @@
 package it.codingbunker.tbs.feature.managment.table
 
-import kotlinx.serialization.Serializable
+import it.github.codingbunker.tbs.common.model.RoleType
 import org.jetbrains.exposed.dao.Entity
 import org.jetbrains.exposed.dao.EntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.transactions.transaction
-
-@Serializable
-enum class RoleType {
-    ADMIN, BOT_DISCORD, BOT_TWITCH, USER
-}
 
 object Roles : IdTable<RoleType>() {
     var roleName = enumerationByName("role_name", 200, RoleType::class)
@@ -23,7 +18,7 @@ class Role(id: EntityID<RoleType>) : Entity<RoleType>(id) {
 
         fun initTableValue() {
             transaction {
-                val missingPermission = RoleType.values().toList() - Role.all().map { it.id.value }
+                val missingPermission = RoleType.values().toList() - Role.all().map { it.id.value }.toSet()
 
                 missingPermission.forEach {
                     Role.new(it) {

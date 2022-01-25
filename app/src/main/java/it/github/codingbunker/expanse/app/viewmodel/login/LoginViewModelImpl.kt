@@ -12,7 +12,7 @@ import co.touchlab.kermit.Logger
 import com.github.kittinunf.result.Result
 import it.github.codingbunker.tbs.common.Constant.Url.SERVER_URL_ENDPOINT
 import it.github.codingbunker.tbs.common.model.LoginRouteDto
-import it.github.codingbunker.tbs.common.repository.ExpanseRepository
+import it.github.codingbunker.tbs.common.repository.LoginRepository
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -26,7 +26,7 @@ import kotlin.coroutines.CoroutineContext
 //}
 
 class LoginViewModelImpl(
-    private val expanseRepository: ExpanseRepository,
+    private val loginRepository: LoginRepository,
     private val coroutineDispatcher: CoroutineContext
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class LoginViewModelImpl(
     fun fetchLogin() {
         viewModelScope.launch(coroutineDispatcher) {
             try {
-                val loginMethodResult = expanseRepository.fetchLoginMethod()
+                val loginMethodResult = loginRepository.fetchLoginMethod()
                 uiState = uiState.copy(showLoading = false, loginMethodList = loginMethodResult)
             } catch (ex: Exception) {
                 logger.e("FetchLoginError on LoginViewModelImpl", ex)

@@ -1,5 +1,8 @@
 package it.codingbunker.tbs.feature.managment.table
 
+import it.github.codingbunker.tbs.common.model.RoleType
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -7,8 +10,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.timestamp
-import java.time.Instant
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import java.util.*
 
 object Users : UUIDTable() {
@@ -19,7 +21,7 @@ object Users : UUIDTable() {
     val discriminator = varchar("discriminator", 10).nullable()
     val email = varchar("email", 255)
     val mfaEnabled = bool("mfaEnabled").default(false)
-    val dateCreation = timestamp("creationDateTime").default(Instant.now())
+    val dateCreation = timestamp("creationDateTime").default(Clock.System.now())
 }
 
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -68,6 +70,6 @@ class UserDTO(
         dateCreation: Instant
     ) : this(
         id, discordId, username, discriminator, email, mfaEnabled, userRoles, avatarHash,
-        avatarImageData, dateCreation.toEpochMilli()
+        avatarImageData, dateCreation.toEpochMilliseconds()
     )
 }

@@ -7,7 +7,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.testing.*
 import it.codingbunker.tbs.feature.managment.table.Bot
 import it.codingbunker.tbs.feature.managment.table.Role
-import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.github.codingbunker.tbs.common.model.RoleType
 import kotlinx.serialization.json.*
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction

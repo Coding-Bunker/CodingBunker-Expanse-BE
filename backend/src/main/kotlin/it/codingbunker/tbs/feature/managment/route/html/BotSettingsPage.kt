@@ -9,8 +9,8 @@ import it.codingbunker.tbs.common.html.page.ionicIcon
 import it.codingbunker.tbs.feature.managment.route.BotManagmentRoute
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_NAME_ID
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_PERMISSION_ID
-import it.codingbunker.tbs.feature.managment.table.BotDTO
-import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.github.codingbunker.tbs.common.model.BotDTO
+import it.github.codingbunker.tbs.common.model.RoleType
 import kotlinx.html.*
 import java.util.*
 

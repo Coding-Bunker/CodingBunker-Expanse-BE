@@ -1,19 +1,21 @@
 package it.codingbunker.tbs.feature.managment.table
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.javatime.timestamp
-import java.time.Instant
+import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
+
 import java.util.*
 
 object Bots : UUIDTable() {
     val botName = varchar("botName", 50)
     val botKey = varchar("botKey", 250)
-    val botDateCreation = timestamp("botCreationDateTime").default(Instant.now())
+    val botDateCreation = timestamp("botCreationDateTime").default(Clock.System.now())
 }
 
 class Bot(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -30,11 +32,3 @@ object BotsRoles : Table() {
     val botRoles = reference("bot_roles", Roles)
     override val primaryKey = PrimaryKey(bot, botRoles)
 }
-
-class BotDTO(
-    var id: String,
-    var botName: String,
-    var botKey: String,
-    var botDateCreation: Instant,
-    var botRoles: Set<RoleType>
-)

@@ -3,9 +3,16 @@ package it.codingbunker.tbs.feature.managment.repository
 import com.github.kittinunf.result.Result
 import it.codingbunker.tbs.common.extension.sha256Base64
 import it.codingbunker.tbs.common.repository.BaseRepository
-import it.codingbunker.tbs.feature.managment.table.*
+import it.codingbunker.tbs.feature.managment.table.Bot
+import it.codingbunker.tbs.feature.managment.table.Bots
+import it.codingbunker.tbs.feature.managment.table.Role
+import it.github.codingbunker.tbs.common.model.BotDTO
+import it.github.codingbunker.tbs.common.model.RoleType
 import it.github.codingbunker.tbs.common.util.onFailure
-import kotlinx.datetime.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -40,7 +47,7 @@ class BotRepositoryImpl : BaseRepository(), BotRepository {
             botKey = id.value.toString().sha256Base64().run {
                 botName.sha256Base64(this)
             }
-            botDateCreation = Clock.System.now().toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC).toJavaInstant()
+            botDateCreation = Clock.System.now().toLocalDateTime(TimeZone.UTC).toInstant(TimeZone.UTC)
             botRoles = SizedCollection(
                 roleList.map {
                     Role[it]

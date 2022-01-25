@@ -5,6 +5,7 @@ import androidx.security.crypto.MasterKeys
 import com.russhwolf.settings.AndroidSettings
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ExperimentalSettingsImplementation
+import com.russhwolf.settings.Settings
 import io.ktor.client.engine.okhttp.*
 import it.github.codingbunker.tbs.common.Constant.Session.COOKIE_STORE
 import org.koin.core.module.Module
@@ -18,7 +19,7 @@ actual fun platformModule(): Module = module {
 
     single { OkHttp.create() }
 
-    single(named(COOKIE_STORE)) {
+    single<Settings>(named(COOKIE_STORE)) {
         val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
         val mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
         val encryptedSharedPreferences = EncryptedSharedPreferences.create(

@@ -2,8 +2,8 @@ package it.codingbunker.tbs.common.model.session
 
 import io.ktor.auth.*
 import it.codingbunker.tbs.common.model.UserPermissionPrincipal
-import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.codingbunker.tbs.feature.managment.table.UserDTO
+import it.github.codingbunker.tbs.common.model.RoleType
 import kotlinx.serialization.Serializable
 
 @Serializable

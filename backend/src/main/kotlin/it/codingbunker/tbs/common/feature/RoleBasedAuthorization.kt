@@ -6,7 +6,7 @@ import io.ktor.request.*
 import io.ktor.routing.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
-import it.codingbunker.tbs.feature.managment.table.RoleType
+import it.github.codingbunker.tbs.common.model.RoleType
 import org.slf4j.LoggerFactory
 
 class AuthorizationException(override val message: String) : Exception(message)

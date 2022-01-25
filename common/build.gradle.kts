@@ -92,6 +92,10 @@ kotlin {
                 with(Deps.Log) {
                     api(kermit)
                 }
+
+                with(Deps.DateTime) {
+                    api(dateTimeX)
+                }
             }
         }
 

@@ -29,9 +29,9 @@ import it.codingbunker.tbs.feature.login.route.Login
 import it.codingbunker.tbs.feature.login.route.provideOAuth2Login
 import it.codingbunker.tbs.feature.managment.model.bot.BotPrincipal
 import it.codingbunker.tbs.feature.managment.repository.BotRepository
-import it.codingbunker.tbs.feature.managment.table.BotDTO
 import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
 import it.github.codingbunker.tbs.common.Constant.Url.SERVER_URL_ENDPOINT
+import it.github.codingbunker.tbs.common.model.BotDTO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json

@@ -2,7 +2,11 @@ package it.codingbunker.tbs.feature.managment.repository
 
 import com.github.kittinunf.result.Result
 import it.codingbunker.tbs.common.client.discord.model.DiscordOAuth2User
-import it.codingbunker.tbs.feature.managment.table.*
+import it.codingbunker.tbs.feature.managment.table.Role
+import it.codingbunker.tbs.feature.managment.table.User
+import it.codingbunker.tbs.feature.managment.table.UserDTO
+import it.codingbunker.tbs.feature.managment.table.Users
+import it.github.codingbunker.tbs.common.model.RoleType
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 

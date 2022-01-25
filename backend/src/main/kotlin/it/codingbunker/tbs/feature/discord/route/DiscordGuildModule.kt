@@ -12,8 +12,8 @@ import io.ktor.routing.*
 import it.codingbunker.tbs.common.feature.withAnyRole
 import it.codingbunker.tbs.data.repo.DiscordRepositoryInterface
 import it.codingbunker.tbs.feature.discord.model.DiscordGuildDTO
-import it.codingbunker.tbs.feature.managment.table.RoleType
 import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.model.RoleType
 import it.github.codingbunker.tbs.common.util.onFailure
 import it.github.codingbunker.tbs.common.util.onSuccess
 import org.koin.ktor.ext.inject
