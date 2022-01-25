@@ -13,6 +13,7 @@ object Constant {
     }
 
     object Session {
+        const val COOKIE_STORE = "COOKIE_STORE"
         const val LOGIN_SESSION_USER = "LOGIN_SESSION_USER"
     }
 

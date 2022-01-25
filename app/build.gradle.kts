@@ -4,7 +4,7 @@ plugins {
     id("kotlin-parcelize")
 }
 
-val compose_version = "1.0.5"
+val compose_version = "1.1.0-rc01"
 
 android {
     compileSdk = 31
@@ -83,8 +83,8 @@ dependencies {
     }
 
     implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.appcompat:appcompat:1.4.0")
-    implementation("com.google.android.material:material:1.4.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("com.google.android.material:material:1.5.0")
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.material:material-icons-extended:$compose_version")
@@ -92,7 +92,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.navigation:navigation-compose:2.4.0-rc01")
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.0")
     implementation("androidx.browser:browser:1.4.0")
 
 

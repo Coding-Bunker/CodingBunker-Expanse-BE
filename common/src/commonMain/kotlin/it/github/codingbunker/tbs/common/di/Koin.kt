@@ -10,6 +10,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import it.github.codingbunker.tbs.common.BuildConfigGenerated
 import it.github.codingbunker.tbs.common.Constant
+import it.github.codingbunker.tbs.common.Constant.Session.COOKIE_STORE
 import it.github.codingbunker.tbs.common.remote.ExpanseApi
 import it.github.codingbunker.tbs.common.repository.CookieRepository
 import it.github.codingbunker.tbs.common.repository.ExpanseRepository
@@ -19,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -39,8 +41,8 @@ fun commonModule(enableNetworkLogs: Boolean) = module {
 
     single { Dispatchers.Default + SupervisorJob() } bind CoroutineContext::class
 
-    single { CookieRepository() }
-    single { ExpanseRepositoryImpl(get(), get()) } bind ExpanseRepository::class
+    single { CookieRepository(get(named(COOKIE_STORE))) }
+    single { ExpanseRepositoryImpl(get()) } bind ExpanseRepository::class
 
     single { ExpanseApi(get()) }
 }
@@ -74,7 +76,7 @@ fun createHttpClient(
             port = BuildConfigGenerated.SERVER_PORT.toInt()
 
             headers {
-                val cookieKey = cookieRepository.getCookie()
+                val cookieKey = cookieRepository.cookie
                 if (cookieKey != null) {
                     header(Constant.Session.LOGIN_SESSION_USER, cookieKey)
                 }

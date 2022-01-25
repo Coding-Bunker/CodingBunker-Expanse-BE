@@ -19,6 +19,7 @@ println("Property:" + prop.getProperty("server.local.url"))
 
 repositories {
     mavenCentral()
+    maven("https://dl.bintray.com/florent37/maven")
 }
 
 android {
@@ -79,6 +80,11 @@ kotlin {
                     api(test)
                 }
 
+                with(Deps.Preferences) {
+                    implementation(core)
+                    implementation(coroutine)
+                }
+
                 with(Deps.KResult) {
                     implementation(result)
                 }
@@ -92,6 +98,11 @@ kotlin {
         sourceSets["androidMain"].dependencies {
             implementation(Deps.KtorClient.okhttp)
             implementation(Deps.Log.logback)
+            implementation(Deps.Preferences.datastore)
+            implementation(Deps.Preferences.datastoreX)
+            with(Deps.Crypto) {
+                implementation(androidXCrypto)
+            }
 //            implementation(Deps.SqlDelight.androidDriver)
         }
     }

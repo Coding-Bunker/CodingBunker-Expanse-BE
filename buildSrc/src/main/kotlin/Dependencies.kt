@@ -1,3 +1,5 @@
+import Versions.androidXCryptoVersion
+import Versions.datastoreXVersion
 import Versions.exposedVersion
 import Versions.junitVersion
 import Versions.kermitVersion
@@ -8,13 +10,14 @@ import Versions.kotlinxDateTimeVersion
 import Versions.ktorVersion
 import Versions.logbackVersion
 import Versions.mockkVersion
+import Versions.preferencesVersion
 
 object Versions {
     const val androidMinSdk = 26
     const val androidCompileSdk = 31
     const val androidTargetSdk = androidCompileSdk
 
-    const val kotlinVersion = "1.5.31"
+    const val kotlinVersion = "1.6.0"
     const val kotlinCoroutines = "1.5.2"
     const val ktorVersion = "1.6.5"
     const val kotlinxSerialization = "1.3.1"
@@ -22,6 +25,9 @@ object Versions {
     const val koinVersion = "3.1.3"
     const val logbackVersion = "1.2.7"
     const val exposedVersion = "0.36.1"
+
+    const val preferencesVersion = "0.8.1"
+    const val datastoreXVersion = "1.0.0"
 
     const val kotlinxDateTimeVersion = "0.3.1"
 
@@ -35,6 +41,8 @@ object Versions {
     const val gradleVersionsPlugin = "0.39.0"
 
     const val kermitVersion = "1.0.0"
+
+    const val androidXCryptoVersion = "1.0.0"
 }
 
 object Deps {
@@ -98,6 +106,14 @@ object Deps {
         const val h2 = "com.h2database:h2:1.4.199"
     }
 
+    object Preferences {
+        const val core = "com.russhwolf:multiplatform-settings:$preferencesVersion"
+        const val coroutine = "com.russhwolf:multiplatform-settings-coroutines:$preferencesVersion"
+        const val datastore = "com.russhwolf:multiplatform-settings-datastore:$preferencesVersion"
+        const val datastoreX = "androidx.datastore:datastore-preferences:$datastoreXVersion"
+        const val noArg = "com.russhwolf:multiplatform-settings-no-arg:$preferencesVersion"
+    }
+
 //    object RSocket {
 //        const val core = "io.rsocket.kotlin:rsocket-core:$rsocketVersion"
 //        const val ktor = "io.rsocket.kotlin:rsocket-transport-ktor:$rsocketVersion"
@@ -120,6 +136,7 @@ object Deps {
 
     object Crypto {
         const val tink = "com.google.crypto.tink:tink:1.6.1"
+        const val androidXCrypto = "androidx.security:security-crypto:$androidXCryptoVersion"
     }
 
     object Log {
