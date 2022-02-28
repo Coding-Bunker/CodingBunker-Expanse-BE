@@ -94,7 +94,6 @@ fun Application.botManagmentRoutes(testOrDebug: Boolean = false) {
                     botRepository.getAllBots()
                         .onSuccess {
                             call.respond(it)
-//                            call.getAllBotHtmlPage(it)
                         }.onFailure {
                             call.respond(HttpStatusCode.InternalServerError)
                         }

@@ -3,9 +3,6 @@ package it.github.codingbunker.expanse.app.viewmodel.login
 import android.content.Context
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.touchlab.kermit.Logger
@@ -13,33 +10,29 @@ import com.github.kittinunf.result.Result
 import it.github.codingbunker.tbs.common.Constant.Url.SERVER_URL_ENDPOINT
 import it.github.codingbunker.tbs.common.model.LoginRouteDto
 import it.github.codingbunker.tbs.common.repository.LoginRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-
-//interface LoginViewModel {
-//    var uiState: LoginModel
-//
-//    fun fetchLogin()
-//
-//    fun openChromeTab(context: Context, url: String)
-//}
-
-class LoginViewModelImpl(
+class LoginViewModel(
     private val loginRepository: LoginRepository,
     private val coroutineDispatcher: CoroutineContext
 ) : ViewModel() {
 
     private val logger = Logger.withTag("LoginViewModel")
 
-    var uiState by mutableStateOf(LoginModel())
-        private set
+    private var mUiState = MutableStateFlow(LoginModel())
+    var uiState: StateFlow<LoginModel> = mUiState
 
     fun fetchLogin() {
         viewModelScope.launch(coroutineDispatcher) {
             try {
                 val loginMethodResult = loginRepository.fetchLoginMethod()
-                uiState = uiState.copy(showLoading = false, loginMethodList = loginMethodResult)
+                mUiState.update {
+                    it.copy(showLoading = false, loginMethodList = loginMethodResult)
+                }
             } catch (ex: Exception) {
                 logger.e("FetchLoginError on LoginViewModelImpl", ex)
             }

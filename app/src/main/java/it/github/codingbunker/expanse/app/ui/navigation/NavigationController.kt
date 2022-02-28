@@ -8,8 +8,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import it.github.codingbunker.expanse.app.ui.bot.BotListPage
 import it.github.codingbunker.expanse.app.ui.login.LoginPage
-import it.github.codingbunker.expanse.app.viewmodel.login.LoginViewModelImpl
+import it.github.codingbunker.expanse.app.viewmodel.login.LoginViewModel
 import it.github.codingbunker.tbs.common.Constant.Session.LOGIN_SESSION_USER
 import it.github.codingbunker.tbs.common.repository.CookieRepository
 import org.koin.androidx.compose.getViewModel
@@ -25,9 +26,9 @@ fun NavigationController(intentNavigationController: IntentNavigationController)
         }
     }
 
-    NavHost(navController, startDestination = LoginNavigation.root.destination) {
+    NavHost(navController, startDestination = BotNavigation.root.destination) {
         composable(LoginNavigation.root.destination) {
-            val loginViewModel: LoginViewModelImpl = getViewModel()
+            val loginViewModel: LoginViewModel = getViewModel()
             val intent = (LocalContext.current as Activity).intent
             LaunchedEffect(intent) {
                 intent.data
@@ -35,6 +36,10 @@ fun NavigationController(intentNavigationController: IntentNavigationController)
 
             loginViewModel.fetchLogin()
             LoginPage(loginViewModel)
+        }
+
+        composable(BotNavigation.root.destination) {
+            BotListPage()
         }
     }
 }

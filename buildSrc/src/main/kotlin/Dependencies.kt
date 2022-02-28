@@ -18,7 +18,7 @@ object Versions {
     const val androidCompileSdk = 31
     const val androidTargetSdk = androidCompileSdk
 
-    const val kotlinVersion = "1.6.0"
+    const val kotlinVersion = "1.6.10"
     const val kotlinCoroutines = "1.5.2"
     const val ktorVersion = "1.6.5"
     const val kotlinxSerialization = "1.3.1"

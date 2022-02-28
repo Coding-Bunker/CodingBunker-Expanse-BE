@@ -3,9 +3,7 @@ package it.codingbunker.tbs.feature.managment.route.html
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.locations.*
-import it.codingbunker.tbs.common.html.page.baseHtmlBody
 import it.codingbunker.tbs.common.html.page.bulmaHead
-import it.codingbunker.tbs.common.html.page.ionicIcon
 import it.codingbunker.tbs.feature.managment.route.BotManagmentRoute
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_NAME_ID
 import it.codingbunker.tbs.feature.managment.route.html.BotSettingsPageConstant.FORM_BOT_PERMISSION_ID
@@ -17,98 +15,6 @@ import java.util.*
 object BotSettingsPageConstant {
     const val FORM_BOT_NAME_ID = "FORM_BOT_NAME_ID"
     const val FORM_BOT_PERMISSION_ID = "FORM_BOT_PERMISSION_ID"
-}
-
-suspend fun ApplicationCall.getAllBotHtmlPage(botList: List<BotDTO>) {
-    respondHtml {
-        bulmaHead {
-            title("Bot Registrati")
-        }
-
-        baseHtmlBody {
-            div {
-                classes = setOf("columns")
-                div {
-                    classes = setOf("column", "is-one-fifth")
-                    button {
-                        classes = setOf("button")
-                        a {
-                            href = application.locations.href(
-                                BotManagmentRoute.Settings.Create(
-                                    BotManagmentRoute.Settings(
-                                        BotManagmentRoute()
-                                    )
-                                )
-                            )
-                            text("Aggiungi un nuovo bot".uppercase())
-                        }
-                    }
-                }
-            }
-
-            div {
-                classes = setOf("table-container")
-                table {
-                    classes = setOf("table")
-                    thead {
-                        tr {
-                            th {
-                                +BotDTO::id.name
-                            }
-                            th {
-                                +BotDTO::botKey.name
-                            }
-                            th {
-                                +BotDTO::botName.name
-                            }
-                            th {
-                                +BotDTO::botDateCreation.name
-                            }
-                            th {
-                                +BotDTO::botRoles.name
-                            }
-                        }
-                    }
-
-                    tbody {
-                        botList.forEach {
-                            tr {
-                                th {
-                                    +it.id
-                                }
-                                th {
-                                    +it.botKey
-                                }
-                                th {
-                                    +it.botName
-                                }
-                                th {
-                                    +it.botDateCreation.toString()
-                                }
-                                th {
-                                    +it.botRoles.joinToString(separator = ", ")
-                                }
-                                th {
-                                    button {
-                                        classes = setOf("button")
-                                        a {
-                                            href = application.locations.href(
-                                                BotManagmentRoute.Settings(BotManagmentRoute())
-                                            )
-
-                                            ionicIcon {
-                                                name("trash")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 suspend fun ApplicationCall.getConfigureNewBotHtmlPage() {

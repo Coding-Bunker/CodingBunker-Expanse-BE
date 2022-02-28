@@ -9,6 +9,8 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,14 +24,14 @@ import com.github.kittinunf.result.Result
 import it.github.codingbunker.expanse.app.R
 import it.github.codingbunker.expanse.app.ui.theme.BlueDiscord
 import it.github.codingbunker.expanse.app.ui.theme.CodingBunkerAppTheme
-import it.github.codingbunker.expanse.app.viewmodel.login.LoginViewModelImpl
+import it.github.codingbunker.expanse.app.viewmodel.login.LoginViewModel
 import it.github.codingbunker.tbs.common.model.LoginRoute
 import it.github.codingbunker.tbs.common.model.LoginRouteDto
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginPage(loginViewModel: LoginViewModelImpl) {
-    val uiState = loginViewModel.uiState
+fun LoginPage(loginViewModel: LoginViewModel) {
+    val uiState by loginViewModel.uiState.collectAsState()
     val context = LocalContext.current
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
